@@ -3,7 +3,7 @@
 #include "../../Component/templates/sprites/Test.hpp"
 
 namespace entity {
-    testEntity::testEntity(utils::Position position_, const EntitySystem* scene_) 
+    testEntity::testEntity(utils::Position position_, EntitySystem* scene_) 
         : entity::Entity(position_, entityTags::test, scene_) {
         Initialize();
     }

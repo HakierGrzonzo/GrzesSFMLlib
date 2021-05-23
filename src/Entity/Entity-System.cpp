@@ -17,14 +17,14 @@ namespace entity {
         physicsWorld = std::shared_ptr<b2World>(new b2World(b2Vec2(0., 0.))); 
     }
 
-    std::vector<std::shared_ptr<Entity>>& EntitySystem::getVectorByLayer(layers layer) {
+    std::vector<std::shared_ptr<Entity>>* EntitySystem::getVectorByLayer(layers layer) {
         switch (layer) {
             case layers::back: 
-                return background;
+                return &background;
             case layers::normal:
-                return normal;
+                return &normal;
             case layers::top:
-                return top;
+                return &top;
             default:
                 // komputer pijany
                 throw std::runtime_error("Are you on sth?");
@@ -50,8 +50,8 @@ namespace entity {
     void EntitySystem::doUpdateTick() {
         for (const auto i : allLayers) {
             auto vectorRef = getVectorByLayer(i);
-            for (unsigned long int i = 0; i < vectorRef.size(); i++) {
-                auto entity = vectorRef[i];
+            for (unsigned long int i = 0; i < vectorRef->size(); i++) {
+                auto entity = vectorRef->operator[](i);
                 for (unsigned long int j = 0; j < entity->components.size(); j++) {
                     entity->components[j]->Update();
                 }
@@ -62,8 +62,8 @@ namespace entity {
     void EntitySystem::doFixedUpdateTick(double timeDelta) {
         for (const auto i : allLayers) {
             auto vectorRef = getVectorByLayer(i);
-            for (unsigned long int i = 0; i < vectorRef.size(); i++) {
-                auto entity = vectorRef[i];
+            for (unsigned long int i = 0; i < vectorRef->size(); i++) {
+                auto entity = vectorRef->operator[](i);
                 for (unsigned long int j = 0; j < entity->components.size(); j++) {
                     entity->components[j]->FixedUpdate(timeDelta);
                 }
@@ -92,6 +92,23 @@ namespace entity {
             }
         }
         return resultVec;
+    }
+
+    void EntitySystem::deleteEntity(const Entity* toDelete) {
+        for (const auto i : allLayers) {
+            auto vectorRef = getVectorByLayer(i);
+            for (unsigned long int i = 0; i < vectorRef->size(); i++) {
+                if (vectorRef->operator[](i).get() == toDelete) {
+                    vectorRef->erase(vectorRef->begin() + i);
+                    // Escape all loops
+                    goto ENTITY_FOUND;
+                }
+            }
+        }
+        // If not found → throw error
+        throw std::runtime_error("Entity not found");
+    ENTITY_FOUND:
+        return;
     }
 
     EntitySystem::~EntitySystem() {}

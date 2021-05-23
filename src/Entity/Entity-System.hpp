@@ -28,7 +28,7 @@ namespace entity {
             std::shared_ptr<b2World> physicsWorld;
             EntitySystem();
             // deletes an entity
-            void deleteEntity(Entity* toDelete);
+            void deleteEntity(const Entity* toDelete);
             // returns first entity in normal with tag
             std::weak_ptr<Entity> GetEntityByTag(entityTags tag);
             // returns all entities in normal with tag
@@ -42,6 +42,6 @@ namespace entity {
             std::weak_ptr<Entity> addEntity(Entity* entity, layers layer = layers::normal);
             virtual ~EntitySystem();
         private:
-            std::vector<std::shared_ptr<Entity>>& getVectorByLayer(layers layer);
+            std::vector<std::shared_ptr<Entity>>* getVectorByLayer(layers layer);
     };
 }

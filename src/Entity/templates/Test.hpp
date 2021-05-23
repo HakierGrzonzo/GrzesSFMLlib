@@ -5,7 +5,7 @@
 namespace entity {
     class testEntity : public Entity {
         public:
-            testEntity(utils::Position position_, const EntitySystem* scene_ = nullptr);
+            testEntity(utils::Position position_, EntitySystem* scene_);
             void Initialize();
             virtual ~testEntity();
     };

@@ -5,7 +5,7 @@
 #include <box2d/b2_math.h>
 
 namespace entity {
-    playerEntity::playerEntity(utils::Position position_, const EntitySystem* scene_) 
+    playerEntity::playerEntity(utils::Position position_, EntitySystem* scene_) 
         : entity::Entity(position_, entityTags::player, scene_) {
         Initialize();
     }

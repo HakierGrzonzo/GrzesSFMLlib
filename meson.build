@@ -1,7 +1,7 @@
 project('GrzesSFMLlib', 'cpp',
   version : '0.1',
   license: 'MIT',
-  default_options : ['warning_level=3', 'cpp_std=c++17'])
+  default_options : ['warning_level=3', 'cpp_std=c++20'])
 
 
 if get_option('buildtype') == 'debug'
@@ -32,6 +32,7 @@ executable('GrzesSFMLlib',
 './src/Component/templates/Renderable.cpp',
 './src/Component/templates/ShadedSprite.cpp',
 './src/Component/templates/Sprite.cpp',
+'./src/Component/templates/Creature.cpp',
 './src/Component/Component.cpp',
 './src/Utils/Position.cpp',
 './src/gameloop.cpp',

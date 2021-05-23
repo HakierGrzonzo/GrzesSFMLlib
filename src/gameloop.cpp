@@ -2,6 +2,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <box2d/b2_math.h>
 #include <stdexcept>
@@ -79,6 +80,10 @@ void gameloop() {
         // print fps
         std::cout << "fps: " << 1.0 / timeSinceLastFrame.count() << "\r"; 
         std::cout.flush();
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::K) && !thatKoriwn.expired()) {
+            testScene.deleteEntity(thatKoriwn.lock().get());
+        }
 
         // not-so-simple movement mechanics
         b2Vec2 playerForce {0, 0};

@@ -3,7 +3,7 @@
 #include "../../Component/templates/sprites/Background.hpp"
 
 namespace entity {
-    background::background(const EntitySystem* scene_)
+    background::background(EntitySystem* scene_)
         : entity::Entity(utils::Position(), entityTags::visual, scene_) {
         Initialize();
     }
