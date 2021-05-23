@@ -7,5 +7,6 @@ namespace entity {
         public:
             testEntity(utils::Position position_, const EntitySystem* scene_ = nullptr);
             void Initialize();
+            virtual ~testEntity();
     };
 }

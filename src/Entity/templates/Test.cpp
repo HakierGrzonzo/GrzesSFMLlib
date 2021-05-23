@@ -11,5 +11,5 @@ namespace entity {
     void testEntity::Initialize() {
         add_component(component::sprites::testSprite);
     }
-
+    testEntity::~testEntity() {}
 }

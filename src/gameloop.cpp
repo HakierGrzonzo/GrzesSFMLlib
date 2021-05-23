@@ -6,21 +6,16 @@
 #include <box2d/b2_math.h>
 #include <stdexcept>
 #include <chrono>
-#include "Component.hpp"
-#include "Entity.hpp"
-#include "Entity-System.hpp"
-#include "Entity-Tags.hpp"
-#include "Utils-Position.hpp"
-#include "Component-Korwin.hpp"
-#include "Entity-Korwin.hpp"
-#include "Component-Renderable.hpp"
+#include "Component/Component.hpp"
+#include "Entity/Entity-System.hpp"
+#include "Entity/templates/Korwin.hpp"
 #include "constants.hpp"
 #include "funcs.hpp"
-#include "Entity-Player.hpp"
-#include "Entity-Background.hpp"
-#include "Component-Shaded-Background.hpp"
-#include "Entity-Test.hpp"
-#include "Component-Physics.hpp"
+#include "Entity/templates/Player.hpp"
+#include "Entity/templates/Background.hpp"
+#include "Entity/templates/Test.hpp"
+#include "Component/templates/sprites/Background.hpp"
+#include "Component/templates/Physics.hpp"
 
 #define playerSpeed .1
 

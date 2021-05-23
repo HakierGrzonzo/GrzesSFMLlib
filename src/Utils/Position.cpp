@@ -1,6 +1,6 @@
-﻿#include "Utils-Position.hpp"
+﻿#include "Position.hpp"
 #include <cmath>
-#include "constants.hpp"
+#include "../constants.hpp"
 
 // define a square macro
 #define sqr(x) x*x
