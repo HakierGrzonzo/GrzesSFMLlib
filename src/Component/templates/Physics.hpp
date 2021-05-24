@@ -15,7 +15,10 @@ namespace component {
             b2Body* body;
             std::shared_ptr<b2World> world;
             void Awake();
-            void FixedUpdate(double timeDelta);
+            void LateFixedUpdate();
+            entity::Entity* getParent() const;
+            virtual void OnCollisionEnter(PhysicsBody* other);
+            virtual void OnCollisionLeave(PhysicsBody* other);
             virtual ~PhysicsBody();
         private:
             b2BodyDef bodyDef;

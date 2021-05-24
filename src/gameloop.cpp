@@ -10,11 +10,13 @@
 #include "Component/Component.hpp"
 #include "Entity/Entity-System.hpp"
 #include "Entity/templates/Korwin.hpp"
+#include "Utils/Position.hpp"
 #include "constants.hpp"
 #include "funcs.hpp"
 #include "Entity/templates/Player.hpp"
 #include "Entity/templates/Background.hpp"
 #include "Entity/templates/Test.hpp"
+#include "Entity/templates/HPdisplay.hpp"
 #include "Component/templates/sprites/Background.hpp"
 #include "Component/templates/Physics.hpp"
 
@@ -52,7 +54,11 @@ void gameloop() {
     ));
     // add player entity
     testScene.addEntity(new entity::playerEntity(
-        utils::Position(1, 1),
+        utils::Position(1000, 1000),
+        &testScene
+    ));
+    testScene.addEntity(new entity::HPdisplayer(
+        utils::Position(),
         &testScene
     ));
     
@@ -99,24 +105,29 @@ void gameloop() {
             playerForce.y += 1;
 
         // if player wants movement, give him movement
-        if (playerForce.Length() > 0) {
-            // get refrence to PhysicsBody component
-            auto playerPhys = player.lock()->GetComponent<component::PhysicsBody>();
-            playerForce.Normalize();
-            playerForce.x *= playerSpeed;
-            playerForce.y *= playerSpeed;
-            playerPhys->body->ApplyForceToCenter(playerForce, true);
+        utils::Position preUpdatePos;
+        if (!player.expired()) {
+            if (playerForce.Length() > 0) {
+                // get refrence to PhysicsBody component
+                auto playerPhys = player.lock()->GetComponent<component::PhysicsBody>();
+                playerForce.Normalize();
+                playerForce.x *= playerSpeed;
+                playerForce.y *= playerSpeed;
+                playerPhys->body->ApplyForceToCenter(playerForce, true);
+            }
+            preUpdatePos = player.lock()->position;
         }
-        auto preUpdatePos = player.lock()->position;
         // do Update() tick;
         testScene.doUpdateTick();
         testScene.doFixedUpdateTick(timeSinceLastFrame.count());
 
         // Refresh view
-        auto postUpdatePos = player.lock()->position;
-        sf::Vector2f newViewPos = (-preUpdatePos.xy + postUpdatePos.xy) * float(25.0) + postUpdatePos.xy;
-        view.setCenter(newViewPos);
-        window.setView(view);
+        if (!player.expired()) {
+            auto postUpdatePos = player.lock()->position;
+            sf::Vector2f newViewPos = (-preUpdatePos.xy + postUpdatePos.xy) * float(25.0) + postUpdatePos.xy;
+            view.setCenter(newViewPos);
+            window.setView(view);
+        }
 
         // DRAWING SECTION
         window.clear();

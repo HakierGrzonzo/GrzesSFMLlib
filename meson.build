@@ -4,14 +4,9 @@ project('GrzesSFMLlib', 'cpp',
   default_options : ['warning_level=3', 'cpp_std=c++20'])
 
 
-if get_option('buildtype') == 'debug'
     add_global_arguments('-g', language : 'cpp')
     add_global_arguments('-O0', language : 'cpp')
     warning('Turning off optimization in debug mode')
-elif get_option('buildtype') == 'release'
-    add_global_arguments('-O3', language : 'cpp')
-    message('Turning on O3 optimization in release mode')
-endif
 
 sfml = dependency('sfml-all')
 box2d = dependency('box2d')
@@ -21,6 +16,7 @@ executable('GrzesSFMLlib',
 './src/Entity/templates/Korwin.cpp',
 './src/Entity/templates/Player.cpp',
 './src/Entity/templates/Test.cpp',
+'./src/Entity/templates/HPdisplay.cpp',
 './src/Entity/Entity.cpp',
 './src/Entity/Entity-System.cpp',
 './src/main.cpp',
@@ -33,7 +29,8 @@ executable('GrzesSFMLlib',
 './src/Component/templates/ShadedSprite.cpp',
 './src/Component/templates/Sprite.cpp',
 './src/Component/templates/Creature.cpp',
+'./src/Component/templates/HPdisplayer.cpp',
 './src/Component/Component.cpp',
 './src/Utils/Position.cpp',
 './src/gameloop.cpp',
-           dependencies: [sfml, box2d])
+           dependencies: [box2d, sfml])

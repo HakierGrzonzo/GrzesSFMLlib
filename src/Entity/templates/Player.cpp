@@ -1,6 +1,7 @@
 #include "Player.hpp"
 #include "../../funcs.hpp"
 #include "../../Component/templates/Physics.hpp"
+#include "../../Component/templates/Creature.hpp"
 #include "../../Component/templates/sprites/Player.hpp"
 #include <box2d/b2_math.h>
 
@@ -13,6 +14,7 @@ namespace entity {
     void playerEntity::Initialize() {
         add_component(component::sprites::player);
         add_component(component::PhysicsBody);
+        add_component(component::Creature);
     }
     
     void playerEntity::LateInitialize() {

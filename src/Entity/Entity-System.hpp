@@ -17,6 +17,11 @@ namespace entity {
         top
     };
     const layers allLayers[] = {back, normal, top};
+    class ContactListener : public b2ContactListener {
+        public:
+            void BeginContact(b2Contact* contact);
+            void EndContact(b2Contact* contact);
+    };
     class EntitySystem {
         public:
             // vectors with entities for three layers
@@ -43,5 +48,7 @@ namespace entity {
             virtual ~EntitySystem();
         private:
             std::vector<std::shared_ptr<Entity>>* getVectorByLayer(layers layer);
+            ContactListener contactListener;
+
     };
 }

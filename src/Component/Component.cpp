@@ -9,4 +9,5 @@ namespace component {
     void Component::Awake() {}
     void Component::Update() {}
     void Component::FixedUpdate(double timeDelta) {}
+    void Component::LateFixedUpdate() {}
 }

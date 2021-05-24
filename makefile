@@ -1,20 +1,8 @@
-configRel:
-	meson configure Build -Dbuildtype=release
-
-configDeb:
-	meson configure Build -Dbuildtype=release
-
-build: configRel
+build: 
 	meson compile -C Build
-
-buildDebug: configDeb
-	meson compile -C Build
-
-debug: buildDebug
-	./Build/GrzesSFMLlib
 
 run: build
 	./Build/GrzesSFMLlib
 
-valgrind: buildDebug
+valgrind: build
 	valgrind -s ./Build/GrzesSFMLlib

@@ -3,18 +3,40 @@
 #include "../funcs.hpp"
 #include "Entity.hpp"
 #include "../Component/templates/Physics.hpp"
+#include <box2d/b2_contact.h>
 #include <box2d/b2_math.h>
 #include <box2d/b2_world.h>
+#include <box2d/b2_world_callbacks.h>
 #include <memory>
 #include <stdexcept>
-#include <vector>
+#include <vector> 
 
 namespace entity {
+
+    void ContactListener::BeginContact(b2Contact* contact) {
+        auto bodyAuserdata = reinterpret_cast<component::PhysicsBody*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
+        auto bodyBuserdata = reinterpret_cast<component::PhysicsBody*>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
+        if (bodyAuserdata != nullptr && bodyBuserdata != nullptr) {
+            bodyAuserdata->OnCollisionEnter(bodyBuserdata);
+            bodyBuserdata->OnCollisionEnter(bodyAuserdata);
+        }
+    }
+    void ContactListener::EndContact(b2Contact* contact) {
+        auto bodyAuserdata = reinterpret_cast<component::PhysicsBody*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
+        auto bodyBuserdata = reinterpret_cast<component::PhysicsBody*>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
+        if (bodyAuserdata != nullptr && bodyBuserdata != nullptr) {
+            bodyAuserdata->OnCollisionLeave(bodyBuserdata);
+            bodyBuserdata->OnCollisionLeave(bodyAuserdata);
+        }
+    }
+
     EntitySystem::EntitySystem() {
         background = std::vector<std::shared_ptr<Entity>>();
         normal = std::vector<std::shared_ptr<Entity>>();
         top = std::vector<std::shared_ptr<Entity>>();
+        contactListener = ContactListener();
         physicsWorld = std::shared_ptr<b2World>(new b2World(b2Vec2(0., 0.))); 
+        physicsWorld->SetContactListener(&contactListener);
     }
 
     std::vector<std::shared_ptr<Entity>>* EntitySystem::getVectorByLayer(layers layer) {
@@ -71,6 +93,16 @@ namespace entity {
         }
         // do physics stuff
         physicsWorld->Step(timeDelta, 8, 3);
+
+        for (const auto i : allLayers) {
+            auto vectorRef = getVectorByLayer(i);
+            for (unsigned long int i = 0; i < vectorRef->size(); i++) {
+                auto entity = vectorRef->operator[](i);
+                for (unsigned long int j = 0; j < entity->components.size(); j++) {
+                    entity->components[j]->LateFixedUpdate();
+                }
+            }
+        }
     }
 
     std::weak_ptr<Entity> EntitySystem::GetEntityByTag(entityTags tag) {

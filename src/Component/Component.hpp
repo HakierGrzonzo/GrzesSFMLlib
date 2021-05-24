@@ -13,6 +13,7 @@ namespace component {
         Component(entity::Entity* parent_);
         virtual void Update(); // called every frame
         virtual void FixedUpdate(double timeDelta); // called every frame with timeDelta, after update
+        virtual void LateFixedUpdate();
         virtual void Awake(); // called on creation
         virtual ~Component();
     protected:
