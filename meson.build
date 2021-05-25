@@ -10,6 +10,9 @@ project('GrzesSFMLlib', 'cpp',
 
 sfml = dependency('sfml-all')
 box2d = dependency('box2d')
+gtk = dependency('gtk+-3.0')
+boxerInc = include_directories('../Boxer/include')
+boxer = declare_dependency(link_args: '/lib64/libBoxer.a', include_directories: boxerInc)
 
 executable('GrzesSFMLlib',
           './src/Entity/templates/Background.cpp',
@@ -34,4 +37,4 @@ executable('GrzesSFMLlib',
 './src/Utils/Position.cpp',
 './src/Utils/ResourceManager.cpp',
 './src/gameloop.cpp',
-           dependencies: [box2d, sfml])
+           dependencies: [box2d, sfml, boxer, gtk])
