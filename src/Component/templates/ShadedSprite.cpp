@@ -11,9 +11,9 @@ namespace component {
         Initialize();
     }
     renderStruct ShadedSpriteRenderer::Render() {
-        shader.setUniform("texture", sf::Shader::CurrentTexture);
+        shader->setUniform("texture", sf::Shader::CurrentTexture);
         sprite.setPosition(parent->position.xy);
-        return {&sprite, &shader};
+        return {&sprite, shader.get()};
     }
 
 }

@@ -2,6 +2,7 @@
 #include "../Component.hpp"
 #include "Sprite.hpp"
 #include <SFML/Graphics/Shader.hpp>
+#include <memory>
 
 namespace component {
     class ShadedSpriteRenderer : public component::SpriteRenderer {
@@ -13,6 +14,6 @@ namespace component {
         void Awake() override;
         renderStruct Render() override;
     protected:
-        sf::Shader shader;
+        std::unique_ptr<sf::Shader> shader;
     };
 }

@@ -6,7 +6,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Window.hpp>
-#include <cstddef>
+#include <algorithm>
 #include "../Renderable.hpp"
 
 namespace component {
@@ -25,7 +25,7 @@ namespace component {
         void setView(sf::Window* window);
         renderStruct Render() override;
     protected:
-        sf::Shader shader;
+        std::unique_ptr<sf::Shader> shader;
     private:
         sf::RectangleShape renderTarget;
         sf::RenderWindow* windowref = nullptr;

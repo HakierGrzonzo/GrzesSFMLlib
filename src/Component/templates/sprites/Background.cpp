@@ -1,5 +1,6 @@
 #include "Background.hpp"
 #include "../../../funcs.hpp"
+#include "../../../Utils/ResourceManager.hpp"
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Shader.hpp>
@@ -17,10 +18,7 @@ namespace component {
     }
 
     void shadedBackground::Initialize() {
-        assertCond(!shader.loadFromFile(
-            "resources/shaders/background.frag",
-            sf::Shader::Fragment
-        ), "failed to load background shader");
+        shader = utils::ResourceManager::GetShader("shaders/background.frag");
     }
     void shadedBackground::setView(sf::Window* window) {
         windowref = dynamic_cast<sf::RenderWindow*>(window);
@@ -38,9 +36,9 @@ namespace component {
         // get windows center position
         auto position = windowref->getView().getCenter();
         // set top left corner coords
-        shader.setUniform("pos", sf::Vector2f(position.x - windowSize.x / 2,  position.y - windowSize.y / 2));
+        shader->setUniform("pos", sf::Vector2f(position.x - windowSize.x / 2,  position.y - windowSize.y / 2));
         // set window size
-        shader.setUniform("size", windowSize);
-        return renderStruct {&renderTarget, &shader};
+        shader->setUniform("size", windowSize);
+        return renderStruct {&renderTarget, shader.get()};
     }
 }

@@ -16,7 +16,7 @@ namespace component {
             renderStruct Render();
         private:
             sf::Text text;
-            sf::Font textFont;
+            std::shared_ptr<sf::Font> textFont;
             std::weak_ptr<entity::Entity> entityToTrack;
             bool isValid;
     };

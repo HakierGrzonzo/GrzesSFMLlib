@@ -32,5 +32,6 @@ executable('GrzesSFMLlib',
 './src/Component/templates/HPdisplayer.cpp',
 './src/Component/Component.cpp',
 './src/Utils/Position.cpp',
+'./src/Utils/ResourceManager.cpp',
 './src/gameloop.cpp',
            dependencies: [box2d, sfml])

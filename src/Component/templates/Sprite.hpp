@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+#include <memory>
 #include <string>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -18,6 +19,6 @@ namespace component {
         renderStruct Render() override;
     protected:
         sf::Sprite sprite;
-        sf::Texture texture;
+        std::shared_ptr<sf::Texture> texture;
     };
 }
