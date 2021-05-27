@@ -36,5 +36,6 @@ executable('GrzesSFMLlib',
 './src/Component/Component.cpp',
 './src/Utils/Position.cpp',
 './src/Utils/ResourceManager.cpp',
+'./src/Utils/CameraSmoother.cpp',
 './src/gameloop.cpp',
            dependencies: [box2d, sfml, boxer, gtk])

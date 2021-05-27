@@ -17,7 +17,9 @@ namespace component {
             void Awake();
             void LateFixedUpdate();
             entity::Entity* getParent() const;
+            // Called when collision begins
             virtual void OnCollisionEnter(PhysicsBody* other);
+            // Called when collision ends
             virtual void OnCollisionLeave(PhysicsBody* other);
             virtual ~PhysicsBody();
         private:

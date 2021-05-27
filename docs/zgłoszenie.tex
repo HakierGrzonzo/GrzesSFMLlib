@@ -1,0 +1,166 @@
+% !TEX program = xelatex
+%Wzór dokumentu
+%tu zmień marginesy i rozmiar czcionki
+\documentclass[a4paper,12pt]{article}
+\usepackage{inputenc}[utf8]
+\usepackage[margin=2.8cm]{geometry}
+\usepackage[polish]{babel}
+
+%Lepiej tego nie zmieniaj, jak co to dodawaj pakiety
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage{mdframed}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{pdfpages}
+\usepackage{tikz}
+	\usetikzlibrary{arrows}
+	\usetikzlibrary{patterns}
+	\usetikzlibrary{decorations.pathmorphing}
+\usepackage{pgf}
+\usepackage[section]{placeins}
+
+
+
+%inny wygląd
+%\usepackage{tgbonum}
+
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\urlstyle{same}
+%Zmienne, zmień je!
+\graphicspath{ {./ilustracje/} }
+\title{Wyznaczanie zależności zasięgu strumienia wodyod ciśnienia hydrostatycznego}
+\author{Grzegorz Koperwas}
+\date{\today}
+
+%lokalizacja polska (odkomentuj jak piszesz po polsku)
+
+\usepackage{polski}
+\usepackage[polish]{babel} 
+\usepackage{indentfirst}
+\usepackage{icomma} 
+
+\brokenpenalty=1000
+\clubpenalty=1000
+\widowpenalty=1000    
+
+%nie odkometowuj wszystkiego, użyj mózgu
+%\renewcommand\thechapter{\arabic{chapter}.}
+\renewcommand\thesection{\arabic{section}.}
+\renewcommand\thesubsection{\arabic{section}.\arabic{subsection}.}
+\renewcommand\thesubsubsection{\arabic{subsubsection}.}
+
+%Makra
+
+\newcommand{\obrazek}[2]{
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=#1]{#2}
+\end{figure}
+}     
+
+\newcommand{\stopnie}{\ensuremath{^{\circ}}}
+
+\newcommand{\twierdzonko}[1]{
+    \begin{center}
+    \begin{mdframed}
+    #1
+    \end{mdframed}          
+    \end{center}
+} 
+
+\newcommand{\dwanajeden}[2]{
+\ensuremath \left( \begin{array}{c}
+    #1\\
+    #2
+\end{array} \right)
+}  
+
+%Stopka i head (sekcja której nie powinno się zmieniać)
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+
+%Zmieniaj od tego miejsca
+\rfoot{}
+\lfoot{}
+\lhead{}
+\rhead{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+
+
+\begin{document}
+\begin{center}
+    \begin{Large}
+        Formularz zgłoszenia projektu
+    \end{Large}
+\end{center}
+
+\subsubsection*{Nazwisko i Imię członka zespołu oraz numer sekcji (wg listy studentów)}
+
+\begin{enumerate}
+    \item Koperwas Grzegorz; grupa C
+\end{enumerate}
+
+\subsubsection*{Temat Projektu}
+
+Gra gatunku \emph{Rouge}\footnote{Losowo generowany świat, śmierć oznacza nowy początek i nowy świat.}, mająca raczej charakter dema technicznego.
+
+\subsubsection*{Krótki opis projektu (założenia projektu, w tym informacja o wykorzystanym języku, środowisku i bibliotekach).}
+
+Głównym celem projektu jest stworzenie dema wykorzystującego system obiektów (Entity) i komponentów (Component), podobnie do rozwiązań z \emph{Unity}. Rozwiązanie te powinno być na tyle generyczne by pozwolić na przyszłe użycie w innych projektach, (taki silnik lub framework do trwożenia gier).
+
+Drugim celem jest wykorzystanie \emph{shaderów} w bibliotece SFML w celu
+osiągnięcia lepszego poziomu grafiki, oraz wykożystanie OpenAL w celu uzyskania
+dźwięku przestrzennego
+
+Celem również jest wykorzystanie takich rozwiązań jak sprytne wskaźniki czy wyjątki wszędzie gdzie to możliwe.
+\vspace{5mm}
+
+\textbf{Języki programowania:}
+\begin{itemize}
+    \item C++
+    \item GLSL, do pisania shaderów
+\end{itemize}
+
+\textbf{Środowisko} - Nie będzie wykorzystywane środowisko pełne, tylko system buildowania aplikacji \href{https://mesonbuild.com/}{Meson}, wraz z backendem \href{https://ninja-build.org/}{Ninja} i kompilatorem gcc.
+
+Jako edytor będzie używany \texttt{nvim}\footnote{Wersja kompilowana bezpośrednio z mastera}. Z innych ciekawych programów to debugger wycieków pamięci \texttt{valgrid}.
+
+
+\vspace{5mm}
+
+\textbf{Biblioteki:}
+\begin{itemize}
+    \item SFML
+    \item \href{https://box2d.org/}{box2d} - Fizyka 2D
+    \item \href{https://github.com/aaronmjacobs/Boxer}{boxer} - Popupy do wyświetlania błędów, takich jak brak obsługi Shaderów
+    \begin{itemize}
+        \item GTK+ 3 - do obsługi popupów na Linuxie
+    \end{itemize}
+    \item OpenAL - Odtwarzanie audio przestrzennego
+    \item LibAV (ffmpeg) - dekompresja i filtry audio
+\end{itemize}
+
+\vspace{1cm}
+
+Projekt jest jako repozytorium Git'a dostępny pod adresem \url{https://github.com/HakierGrzonzo/GrzesSFMLlib}.
+
+\end{document}

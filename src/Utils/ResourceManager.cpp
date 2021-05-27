@@ -43,6 +43,11 @@ namespace utils {
     std::unique_ptr<sf::Shader> ResourceManager::GetShader(std::string name) {
         auto shader = std::unique_ptr<sf::Shader>(new sf::Shader());
         std::string source;
+        /* 
+         * Shaders require special treatment as they should not be copied,
+         * so we cache source instead to avoid disk i/o, we will live with
+         * shader compilation on every call for now.
+         * */
         try {
             source = loadedShaders.at(name);
         }
@@ -50,6 +55,7 @@ namespace utils {
             print("Loading asset: " + name);
             std::ifstream sourceFile = std::ifstream(GetPrefix() + name, std::ios::binary);
             assertCond(!sourceFile.is_open(), "Failed to open file: " + name);
+            // read source to string
             source = std::string(std::istreambuf_iterator<char>(sourceFile), {});
             loadedShaders.emplace(name, source);
         }
@@ -62,4 +68,12 @@ namespace utils {
         std::map<std::string, std::shared_ptr<sf::Font>>();
     std::map<std::string, std::string> ResourceManager::loadedShaders =
         std::map<std::string, std::string>();
+
+    void ResourceManager::Flush() {
+        unsigned long long int resourceNumber = textureCache.size() + fontCache.size() + loadedShaders.size();
+        textureCache.clear();
+        fontCache.clear();
+        loadedShaders.clear();
+        print(resourceNumber);
+    }
 }

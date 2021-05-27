@@ -10,6 +10,7 @@
 
 namespace utils {
     class ResourceManager {
+        // Cache resources to avoid disk i/o during gameplay
         public:
             static const std::string GetPrefix();
             // Get assets by refrence
@@ -17,7 +18,7 @@ namespace utils {
             static std::shared_ptr<sf::Font> GetFont(std::string name);
             // Get shader by value
             static std::unique_ptr<sf::Shader> GetShader(std::string name);
-            // Flush Cache
+            // Flush Cache, will not delete resources if they are used somewhere
             static void Flush();
         private:
             static std::map<std::string, std::shared_ptr<sf::Texture>> textureCache;

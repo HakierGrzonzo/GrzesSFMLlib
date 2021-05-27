@@ -11,6 +11,7 @@ namespace component {
         body = nullptr;
     }
     PhysicsBody::~PhysicsBody() {
+        // Destroy box2d body
         world->DestroyBody(body);
     }
     void PhysicsBody::Awake() {
@@ -18,6 +19,7 @@ namespace component {
         bodyDef.type = b2_dynamicBody;
         bodyDef.fixedRotation = true;
         bodyDef.position.Set(parent->position.xy.x / box2sfRatio, parent->position.xy.y / box2sfRatio);
+        // add `this` as userData for Colision callbacks to work
         bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
         body = world->CreateBody(&bodyDef);
         shape.SetAsBox(.1, .1);
@@ -39,6 +41,5 @@ namespace component {
         }
     }
 
-    void PhysicsBody::OnCollisionLeave(PhysicsBody* other) {
-    }
+    void PhysicsBody::OnCollisionLeave(PhysicsBody* other) {}
 }

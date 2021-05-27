@@ -21,3 +21,4 @@
 
 #define sf2box(vec) b2Vec2(vec.x / box2sfRatio, vec.y / box2sfRatio)
 #define box2sf(vec) sf::Vector2f(vec.x * box2sfRatio, vec.y * box2sfRatio)
+

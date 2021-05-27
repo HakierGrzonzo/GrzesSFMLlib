@@ -378,3 +378,8 @@ vgcore.*
 main
 
 *.bak
+
+*.synctex.gz
+*.pdf
+*.aux
+*.out

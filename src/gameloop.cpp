@@ -11,6 +11,7 @@
 #include "Entity/Entity-System.hpp"
 #include "Entity/templates/Korwin.hpp"
 #include "Utils/Position.hpp"
+#include "Utils/ResourceManager.hpp"
 #include "constants.hpp"
 #include "funcs.hpp"
 #include "Entity/templates/Player.hpp"
@@ -23,8 +24,6 @@
 #define playerSpeed .1
 
 void gameloop() {
-    // Setup clock for measuring frametimes
-    auto lastTime = std::chrono::steady_clock::now();
     // ========================== GAME WINDOW ========================== 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "sfml plswrk");
     sf::View view;
@@ -65,7 +64,13 @@ void gameloop() {
     // get refrence to player
     auto player = testScene.GetEntityByTag(entity::entityTags::player);
 
-    // ========================== GAME LOOP ========================== 
+    // Setup clock for measuring frametimes
+    auto lastTime = std::chrono::steady_clock::now();
+
+    /*
+     * main loop
+     */
+
     while (window.isOpen()) {
         // EVENTS
         sf::Event event;
@@ -160,4 +165,5 @@ void gameloop() {
         }
         window.display();
     }
+    utils::ResourceManager::Flush();
 }
