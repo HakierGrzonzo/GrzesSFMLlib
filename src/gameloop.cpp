@@ -20,6 +20,7 @@
 #include "Entity/templates/HPdisplay.hpp"
 #include "Component/templates/sprites/Background.hpp"
 #include "Component/templates/Physics.hpp"
+#include "Utils/CameraSmoother.hpp"
 
 #define playerSpeed .1
 
@@ -63,6 +64,10 @@ void gameloop() {
     
     // get refrence to player
     auto player = testScene.GetEntityByTag(entity::entityTags::player);
+    auto cameraPosSmoother = utils::CameraSmoother(
+            sf::Vector2f(50, 50),
+            player.lock()->position.xy
+        );
 
     // Setup clock for measuring frametimes
     auto lastTime = std::chrono::steady_clock::now();
@@ -130,6 +135,12 @@ void gameloop() {
         if (!player.expired()) {
             auto postUpdatePos = player.lock()->position;
             sf::Vector2f newViewPos = (-preUpdatePos.xy + postUpdatePos.xy) * float(25.0) + postUpdatePos.xy;
+            newViewPos = cameraPosSmoother.calculatePosition(
+                    newViewPos, 
+                    window.getView().getSize(), 
+                    postUpdatePos.xy, 
+                    timeSinceLastFrame.count()
+                );
             view.setCenter(newViewPos);
             window.setView(view);
         }
