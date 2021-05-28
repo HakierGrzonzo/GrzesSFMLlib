@@ -2,6 +2,7 @@
 
 #include "../Component/Component.hpp"
 #include "Entity-Tags.hpp"
+#include "Inputs.hpp"
 #define EntitySystemDefined
 #ifndef EntityDefined
     #include "Entity.hpp"
@@ -11,12 +12,16 @@
 #include <box2d/b2_world.h>
 
 namespace entity {
+
+    // define layers
     enum layers {
         back,
         normal,
         top
     };
     const layers allLayers[] = {back, normal, top};
+    
+    // helper class for EntitySystem
     class ContactListener : public b2ContactListener {
         public:
             void BeginContact(b2Contact* contact);
@@ -54,6 +59,11 @@ namespace entity {
             // add Entity to a layer, calls Initialize() on entity, then
             // calls Awake() on components, then LateInitialize() on entity
             std::weak_ptr<Entity> addEntity(Entity* entity, layers layer = layers::normal);
+            
+            // input handler
+            InputDirector inputHandler;
+
+            // destructor
             virtual ~EntitySystem();
         private:
             // get Vector that is connected with layer e.g. back -> background

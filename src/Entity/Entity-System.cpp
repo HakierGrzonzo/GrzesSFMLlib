@@ -3,6 +3,7 @@
 #include "../funcs.hpp"
 #include "Entity.hpp"
 #include "../Component/templates/Physics.hpp"
+#include "Inputs.hpp"
 #include <box2d/b2_contact.h>
 #include <box2d/b2_math.h>
 #include <box2d/b2_world.h>
@@ -34,9 +35,12 @@ namespace entity {
         background = std::vector<std::shared_ptr<Entity>>();
         normal = std::vector<std::shared_ptr<Entity>>();
         top = std::vector<std::shared_ptr<Entity>>();
+
         contactListener = ContactListener();
         physicsWorld = std::shared_ptr<b2World>(new b2World(b2Vec2(0., 0.))); 
         physicsWorld->SetContactListener(&contactListener);
+
+        inputHandler = InputDirector();
     }
 
     std::vector<std::shared_ptr<Entity>>* EntitySystem::getVectorByLayer(layers layer) {
