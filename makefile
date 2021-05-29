@@ -5,4 +5,4 @@ run: build
 	./Build/GrzesSFMLlib
 
 valgrind: build
-	valgrind -s --leak-check=full ./Build/GrzesSFMLlib
+	valgrind ./Build/GrzesSFMLlib

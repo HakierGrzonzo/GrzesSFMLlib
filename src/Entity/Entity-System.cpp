@@ -74,6 +74,7 @@ namespace entity {
     }
 
     void EntitySystem::doUpdateTick() {
+        inputHandler.doTick();
         for (const auto i : allLayers) {
             auto vectorRef = getVectorByLayer(i);
             for (unsigned long int i = 0; i < vectorRef->size(); i++) {

@@ -4,9 +4,12 @@
 #include <memory>
 
 namespace entity {
-    struct callBackContainer {
-        void* arg;
-        void (*callback)(void*);
+    class callBackContainer {
+        public:
+            callBackContainer(void* arg_, void (*callback_)(void*));
+            callBackContainer();
+            void* arg;
+            void (*callback)(void*);
     };
     class InputDirector {
         public:

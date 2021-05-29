@@ -23,15 +23,10 @@ namespace utils {
         sf::Vector2f changeInChange = wantedChange - lastChange;
         double factor = fmax(200 / (length((lastPosition - center)) + 1), 1)* timeStep;
         sf::Vector2f allowedChange = maxChange * factor;
-        print(factor)
-        printVec2(allowedChange);
-        printVec2(wantedChange);
         sf::Vector2f newOffset = lastPosition + lastChange + minimize(
                 changeInChange,
                 ensureSignVec(changeInChange, allowedChange)
             ) - center;
-        printVec2(ensureSignVec(newOffset, bounds));
-        printVec2(newOffset)
         newOffset = minimize(newOffset, ensureSignVec(newOffset, bounds));
         lastChange = newOffset + center - lastPosition;
         lastPosition = center + newOffset;

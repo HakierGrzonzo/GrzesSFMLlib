@@ -105,6 +105,7 @@ void gameloop() {
         b2Vec2 playerForce {0, 0};
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
             window.close();
+        /*
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
             playerForce.x += 1;
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
@@ -115,8 +116,10 @@ void gameloop() {
             playerForce.y += 1;
 
         // if player wants movement, give him movement
+        */
         utils::Position preUpdatePos;
         if (!player.expired()) {
+            /*
             if (playerForce.Length() > 0) {
                 // get refrence to PhysicsBody component
                 auto playerPhys = player.lock()->GetComponent<component::PhysicsBody>();
@@ -125,6 +128,7 @@ void gameloop() {
                 playerForce.y *= playerSpeed;
                 playerPhys->body->ApplyForceToCenter(playerForce, true);
             }
+            */
             preUpdatePos = player.lock()->position;
         }
         // do Update() tick;
