@@ -12,13 +12,9 @@ namespace component {
         callbacks[1] = parent->scene->inputHandler.subscribe(sf::Keyboard::S, &PlayerControler::moveDown, (void*) this);
         callbacks[2] = parent->scene->inputHandler.subscribe(sf::Keyboard::A, &PlayerControler::moveLeft, (void*) this);
         callbacks[3] = parent->scene->inputHandler.subscribe(sf::Keyboard::D, &PlayerControler::moveRight, (void*) this);
-        print(reinterpret_cast<void*>(PlayerControler::moveDown));
     }
 
     void PlayerControler::moveLeft(void* callback) {
-        print("here2");
-        print(callback);
-        std::cout.flush();
         PlayerControler* thisPtr = (PlayerControler*) callback;
         thisPtr->playerForce.x -= 1;
     }

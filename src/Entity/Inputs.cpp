@@ -3,9 +3,12 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <sys/types.h>
 #include "../funcs.hpp"
 
 namespace entity {
+    const std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789__________();,.\"/\\~=- __\t______+-*/lrud0123456789_________________";
+
     callBackContainer::callBackContainer() {
         arg = nullptr;
         callback = &nullCallback;
@@ -32,9 +35,13 @@ namespace entity {
             assertCond(arg == nullptr, "arg is null!");
             auto callbackElement = std::make_shared<callBackContainer>(callBackContainer(arg, callback));
             subscriberMap[key] = std::weak_ptr<callBackContainer>(callbackElement);
-            print(callbackElement->callback);
-            print(callbackElement->arg);
-            print("registered callback for: " + std::to_string(key));
+            std::string registeredFor;
+            try {
+                registeredFor = alphabet[key];
+            } catch (...) {
+                registeredFor = std::to_string(key);
+            }
+            print("registered callback for: " + registeredFor);
             return callbackElement;
         }
         throw std::runtime_error("Key is bound!");

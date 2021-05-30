@@ -5,6 +5,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <box2d/b2_math.h>
+#include <cstdlib>
 #include <stdexcept>
 #include <chrono>
 #include "Component/Component.hpp"
@@ -16,7 +17,7 @@
 #include "funcs.hpp"
 #include "Entity/templates/Player.hpp"
 #include "Entity/templates/Background.hpp"
-#include "Entity/templates/Test.hpp"
+#include "Entity/templates/SpawnerTest.hpp"
 #include "Entity/templates/HPdisplay.hpp"
 #include "Component/templates/sprites/Background.hpp"
 #include "Component/templates/Physics.hpp"
@@ -39,7 +40,7 @@ void gameloop() {
         &testScene
     ), entity::layers::back).lock()->GetComponent<component::shadedBackground>()->setView(&window);
     // add test dev entity
-    testScene.addEntity(new entity::testEntity(
+    testScene.addEntity(new entity::SpawnerTest(
         utils::Position(0, 600),
         &testScene
     ));
@@ -75,7 +76,7 @@ void gameloop() {
     /*
      * main loop
      */
-
+    print("entering main loop!")
     while (window.isOpen()) {
         // EVENTS
         sf::Event event;
@@ -94,7 +95,8 @@ void gameloop() {
         std::chrono::duration<double> timeSinceLastFrame = now - lastTime;
         lastTime = now;
         // print fps
-        std::cout << "fps: " << 1.0 / timeSinceLastFrame.count() << "\r"; 
+        std::cout << "fps: " << 1.0 / timeSinceLastFrame.count() << "\tframetime: " << timeSinceLastFrame.count() << "\tentities: " <<
+            testScene.background.size() + testScene.normal.size() + testScene.top.size() << "\r"; 
         std::cout.flush();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::K) && !thatKoriwn.expired()) {
@@ -105,30 +107,8 @@ void gameloop() {
         b2Vec2 playerForce {0, 0};
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
             window.close();
-        /*
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-            playerForce.x += 1;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-            playerForce.x -= 1;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-            playerForce.y -= 1;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-            playerForce.y += 1;
-
-        // if player wants movement, give him movement
-        */
         utils::Position preUpdatePos;
         if (!player.expired()) {
-            /*
-            if (playerForce.Length() > 0) {
-                // get refrence to PhysicsBody component
-                auto playerPhys = player.lock()->GetComponent<component::PhysicsBody>();
-                playerForce.Normalize();
-                playerForce.x *= playerSpeed;
-                playerForce.y *= playerSpeed;
-                playerPhys->body->ApplyForceToCenter(playerForce, true);
-            }
-            */
             preUpdatePos = player.lock()->position;
         }
         // do Update() tick;
