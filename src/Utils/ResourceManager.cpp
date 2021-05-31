@@ -2,11 +2,14 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Shader.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <endian.h>
 #include <exception>
 #include <fstream>
+#include <ios>
 #include <iterator>
 #include <memory>
 #include <string>
+#include <vector>
 #include "../funcs.hpp"
 
 namespace utils {
@@ -40,6 +43,27 @@ namespace utils {
         }
     }
 
+    std::shared_ptr<std::vector<uint8_t>> ResourceManager::GetBytes(std::string name) {
+        try {
+            return loadedBytes.at(name);
+        } catch (...) {
+            print("Loading asset: " + name);
+            std::ifstream rawFile = std::ifstream(GetPrefix() + name, std::ios::binary);
+            assertCond(!rawFile.is_open(), "Failed to open file: " + name);
+            auto bytes = std::make_shared<std::vector<uint8_t>>(std::vector<uint8_t>());
+            std::streampos pos = rawFile.tellg();
+            while (pos != -1) {
+                uint8_t byte;
+                rawFile >> byte;
+                bytes->push_back(byte);
+                pos = rawFile.tellg();
+            }
+            assertCond(bytes->size() == 0, "File is empty!");
+            loadedBytes.emplace(name, bytes);
+            return bytes;
+        }
+    }
+
     std::unique_ptr<sf::Shader> ResourceManager::GetShader(std::string name) {
         auto shader = std::unique_ptr<sf::Shader>(new sf::Shader());
         std::string source;
@@ -62,10 +86,13 @@ namespace utils {
         assertCond(!(shader->loadFromMemory(source, sf::Shader::Fragment)), "Failed to compile shader!: " + name);
         return shader;
     }
+
     std::map<std::string, std::shared_ptr<sf::Texture>> ResourceManager::textureCache =
         std::map<std::string, std::shared_ptr<sf::Texture>>();
     std::map<std::string, std::shared_ptr<sf::Font>> ResourceManager::fontCache =
         std::map<std::string, std::shared_ptr<sf::Font>>();
+    std::map<std::string, std::shared_ptr<std::vector<uint8_t>>> ResourceManager::loadedBytes =
+        std::map<std::string, std::shared_ptr<std::vector<uint8_t>>>();
     std::map<std::string, std::string> ResourceManager::loadedShaders =
         std::map<std::string, std::string>();
 

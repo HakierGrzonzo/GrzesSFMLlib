@@ -17,6 +17,11 @@
     throw std::runtime_error(msg); \
 }
 
+#define assertNotNull(ptr) if(ptr == nullptr) { \
+    std::cerr << "ASSERTION: " << __FILE__ << ":" << __LINE__ << "\t->\t" << #ptr << " is null" << std::endl; \
+    throw std::runtime_error("Failed Assertion check"); \
+}
+
 #define elif else if
 
 #define sf2box(vec) b2Vec2(vec.x / box2sfRatio, vec.y / box2sfRatio)

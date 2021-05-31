@@ -6,6 +6,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <vector>
 
 
 namespace utils {
@@ -16,6 +17,7 @@ namespace utils {
             // Get assets by refrence
             static std::shared_ptr<sf::Texture> GetTexture(std::string name);
             static std::shared_ptr<sf::Font> GetFont(std::string name);
+            static std::shared_ptr<std::vector<uint8_t>> GetBytes(std::string name);
             // Get shader by value
             static std::unique_ptr<sf::Shader> GetShader(std::string name);
             // Flush Cache, will not delete resources if they are used somewhere
@@ -24,5 +26,8 @@ namespace utils {
             static std::map<std::string, std::shared_ptr<sf::Texture>> textureCache;
             static std::map<std::string, std::shared_ptr<sf::Font>> fontCache;
             static std::map<std::string, std::string> loadedShaders;
+            static std::map<
+                std::string, std::shared_ptr<std::vector<uint8_t>>>
+                loadedBytes;
     };
 }

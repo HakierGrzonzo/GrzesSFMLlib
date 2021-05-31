@@ -11,6 +11,10 @@ project('GrzesSFMLlib', 'cpp',
 sfml = dependency('sfml-all')
 box2d = dependency('box2d')
 gtk = dependency('gtk+-3.0')
+openal = dependency('openal')
+libavcodec = dependency('libavcodec')
+libavutil = dependency('libavutil')
+libavformat = dependency('libavformat')
 boxerInc = include_directories('../Boxer/include')
 boxer = declare_dependency(link_args: '/lib64/libBoxer.a', include_directories: boxerInc)
 
@@ -43,4 +47,16 @@ executable('GrzesSFMLlib',
           './src/Utils/ResourceManager.cpp',
           './src/Utils/CameraSmoother.cpp',
           './src/gameloop.cpp',
-           dependencies: [box2d, sfml, boxer, gtk])
+          './src/Audio/AudioScene.cpp',
+          './src/Audio/AudioMacros.cpp',
+          './src/Audio/Player.cpp',
+           dependencies: [
+             box2d, 
+             sfml, 
+             boxer, 
+             gtk, 
+             openal,
+             libavcodec,
+             libavutil,
+             libavformat
+             ])

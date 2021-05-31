@@ -22,6 +22,7 @@
 #include "Component/templates/sprites/Background.hpp"
 #include "Component/templates/Physics.hpp"
 #include "Utils/CameraSmoother.hpp"
+#include "Audio/AudioScene.hpp"
 
 #define playerSpeed .1
 
@@ -62,6 +63,7 @@ void gameloop() {
         utils::Position(),
         &testScene
     ));
+    audio::AudioScene audioScene;
     
     // get refrence to player
     auto player = testScene.GetEntityByTag(entity::entityTags::player);

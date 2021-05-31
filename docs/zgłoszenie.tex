@@ -1,7 +1,7 @@
 % !TEX program = xelatex
 %Wzór dokumentu
 %tu zmień marginesy i rozmiar czcionki
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,11pt]{article}
 \usepackage{inputenc}[utf8]
 \usepackage[margin=2.8cm]{geometry}
 \usepackage[polish]{babel}
@@ -116,7 +116,8 @@
 \subsubsection*{Nazwisko i Imię członka zespołu oraz numer sekcji (wg listy studentów)}
 
 \begin{enumerate}
-    \item Koperwas Grzegorz; grupa C
+    \item Koperwas Grzegorz; sekcja 2 
+    \item Patryk Sroczyński; [REZYGNACJA]
 \end{enumerate}
 
 \subsubsection*{Temat Projektu}
@@ -125,42 +126,39 @@ Gra gatunku \emph{Rouge}\footnote{Losowo generowany świat, śmierć oznacza now
 
 \subsubsection*{Krótki opis projektu (założenia projektu, w tym informacja o wykorzystanym języku, środowisku i bibliotekach).}
 
-Głównym celem projektu jest stworzenie dema wykorzystującego system obiektów (Entity) i komponentów (Component), podobnie do rozwiązań z \emph{Unity}. Rozwiązanie te powinno być na tyle generyczne by pozwolić na przyszłe użycie w innych projektach, (taki silnik lub framework do trwożenia gier).
+Celem projektu jest stworzenie frameworka zapewniającego abstrakcję niskopoziomowych bibliotek, oraz zapewniającego system Entity-Component.
 
-Drugim celem jest wykorzystanie \emph{shaderów} w bibliotece SFML w celu
-osiągnięcia lepszego poziomu grafiki, oraz wykożystanie OpenAL w celu uzyskania
-dźwięku przestrzennego
-
-Celem również jest wykorzystanie takich rozwiązań jak sprytne wskaźniki czy wyjątki wszędzie gdzie to możliwe.
 \vspace{5mm}
 
 \textbf{Języki programowania:}
 \begin{itemize}
-    \item C++
+    \item C++ (Standard 17 lub 20), raczej z rozszerzeniami GNU.
     \item GLSL, do pisania shaderów
+    \item Bash, skrypty buildowania zależności
+    \item Inne języki skryptowe w ramach potrzeby (tylko buildtime)
 \end{itemize}
 
-\textbf{Środowisko} - Nie będzie wykorzystywane środowisko pełne, tylko system buildowania aplikacji \href{https://mesonbuild.com/}{Meson}, wraz z backendem \href{https://ninja-build.org/}{Ninja} i kompilatorem gcc.
+\textbf{Środowisko} - Nie będzie wykorzystywane środowisko pełne, tylko system buildowania aplikacji \href{https://mesonbuild.com/}{Meson}, wraz z backendem \href{https://ninja-build.org/}{Ninja} i kompilatorem gcc. Zostanie dostarczony również plik \texttt{dockerfile} do kompilacji krzyżowej na windowsa.
 
-Jako edytor będzie używany \texttt{nvim}\footnote{Wersja kompilowana bezpośrednio z mastera}. Z innych ciekawych programów to debugger wycieków pamięci \texttt{valgrid}.
+Jako edytor będzie używany \texttt{nvim}\footnote{Wersja nightly, czyli kompilowana z mastera}. Z innych ciekawych programów to debugger wycieków pamięci \texttt{valgrid}. Dokumentacja jest pisana z użyciem programu \LaTeX{} oraz jako edytor jest używane \texttt{Visual Studio Code}.
 
 
 \vspace{5mm}
 
 \textbf{Biblioteki:}
 \begin{itemize}
-    \item SFML
+    \item SFML - obsługa okien i abstrakcja OpenGL
     \item \href{https://box2d.org/}{box2d} - Fizyka 2D
     \item \href{https://github.com/aaronmjacobs/Boxer}{boxer} - Popupy do wyświetlania błędów, takich jak brak obsługi Shaderów
     \begin{itemize}
         \item GTK+ 3 - do obsługi popupów na Linuxie
     \end{itemize}
     \item OpenAL - Odtwarzanie audio przestrzennego
-    \item LibAV (ffmpeg) - dekompresja i filtry audio
+    \item libavcodec, libavdevice, libavfilter, libavformat, libavutil, libpostproc, libswresample, libswscale (ffmpeg) - dekompresja i filtry audio; może tekstura video?
+    \item pthread/win32pthread lub inna biblioteka do obsługi wątków.
 \end{itemize}
 
-\vspace{1cm}
 
-Projekt jest jako repozytorium Git'a dostępny pod adresem \url{https://github.com/HakierGrzonzo/GrzesSFMLlib}.
+Projekt jest jako repozytorium Git'a dostępny pod adresem \url{https://github.com/HakierGrzonzo/GrzesSFMLlib}.\footnote{Z chwilą zgłaszania zostało napisane 1200 linijek.}
 
 \end{document}

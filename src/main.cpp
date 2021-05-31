@@ -16,6 +16,8 @@ int main() {
     try {
         gameloop();
     } catch(const std::exception& e) {
+        std::cerr.flush();
+        std::cout << e.what() << std::endl;
         boxer::show(
                 (std::string("Unfortunatly we had encountered an Exception:\n\n ") + std::string(e.what())).c_str(),
                 "A very sad crash handler",

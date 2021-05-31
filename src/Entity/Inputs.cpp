@@ -32,7 +32,6 @@ namespace entity {
         if (subscriberMap[key].expired()) {
             // key is not bound to anything
             assertCond(callback == nullptr, "callback is null!");
-            assertCond(arg == nullptr, "arg is null!");
             auto callbackElement = std::make_shared<callBackContainer>(callBackContainer(arg, callback));
             subscriberMap[key] = std::weak_ptr<callBackContainer>(callbackElement);
             std::string registeredFor;

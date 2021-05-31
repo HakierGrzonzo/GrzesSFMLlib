@@ -41,7 +41,6 @@ namespace component {
                 ) {
             // get random x that is -radius < x < radius
             float x = (float(rand()) / float((RAND_MAX)) * spawnRadius * 2.0 - spawnRadius);
-            print((float(rand()) / float((RAND_MAX)) * spawnRadius * 2.0 - spawnRadius));
             /*
              * Calculate y as point on a circle, according to equation:
              * \[
@@ -55,7 +54,6 @@ namespace component {
             // add spawner position to x
             x += parent->position.xy.x;
             utils::Position spawnLocation = utils::Position(x, y);
-            printVec2(spawnLocation.xy);
             Spawn(spawnLocation);
             timeSinceLastSpawn = 0;
             if (limit > 0) {
