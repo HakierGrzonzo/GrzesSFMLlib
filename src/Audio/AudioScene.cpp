@@ -27,14 +27,15 @@ namespace audio {
         ALenum format = AL_FORMAT_MONO16;
         ALuint buffer;
         alCall(alGenBuffers(1, &buffer));
-        alCall(alBufferData(buffer, format, bytesRef->data(), bytesRef->size(), 8000));
+        alCall(alBufferData(buffer, format, bytesRef->data(), bytesRef->size(), 44000));
 
         ALuint source;
         alCall(alGenSources(1, &source));
         alCall(alSourcef(source, AL_PITCH, 1));
         alCall(alSourcef(source, AL_GAIN, 1.0));
-        alCall(alSource3f(source, AL_POSITION, 5., 5., 5.));
-        alCall(alSource3f(source, AL_VELOCITY, 5., 5., 5.));
+        // AL_POSITON is in X, -, Y format
+        alCall(alSource3f(source, AL_POSITION, 0, 0, -1));
+        alCall(alSource3f(source, AL_VELOCITY, 0, 0, 0));
         alCall(alSourcei(source, AL_LOOPING, true));
         alCall(alSourcei(source, AL_BUFFER, buffer));
 

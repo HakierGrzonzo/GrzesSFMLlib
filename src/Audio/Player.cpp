@@ -14,11 +14,18 @@ extern "C" {
 #include <memory>
 #include <stdexcept>
 
+std::string getFormatString(int format) {
+    char buff[500];
+    av_get_sample_fmt_string(buff, 500, (AVSampleFormat) format);
+    return buff;
+}
+
 namespace audio {
     Player::Player(std::string filename) {
         print("Starting ffmpeg decoder")
         decodedData = std::vector<uint8_t>();
         inputContext = nullptr;
+        frame = nullptr;
         int error;
         error = avformat_open_input(&inputContext, filename.c_str(), nullptr, nullptr);
         assertCond(error < 0, "Failed to open file:\t" + filename);
@@ -38,6 +45,7 @@ namespace audio {
         error = avcodec_open2(codecContext, codec, nullptr);
         assertCond(error < 0, "Failed to open decoder context: " + decodeError(error));
 
+
         // decode audio
         AVPacket* pkt = av_packet_alloc();
         assertNotNull(pkt);
@@ -49,6 +57,9 @@ namespace audio {
                 assertNotNull(frame);
             }
             error = av_read_frame(inputContext, pkt);
+            if (error == AVERROR_EOF) {
+                break;
+            }
             assertCond(error < 0, "Failed to read frame: " + decodeError(error));
             if (pkt->size) {
                 decode(pkt);
@@ -73,11 +84,15 @@ namespace audio {
                 return;
             else if (ret < 0)
                 throw std::runtime_error("Failed to recive frame!");
-            auto channels = frame->channels;
             int sampleSize = av_get_bytes_per_sample((AVSampleFormat) frame->format);
-            auto dataSize = frame->nb_samples * channels * sampleSize;
-            print(dataSize);
-            for (int i = 0; i < dataSize; i++) decodedData.push_back(*frame->data[i]);
+            for (int i = 0; i < frame->nb_samples; i++) {
+                for (int ch = 0; ch < frame->channels; ch++) {
+                    for (int byte = 0; byte < sampleSize; byte++) {
+                        uint8_t* dataptr = frame->data[ch] + i * sampleSize + byte; 
+                        decodedData.push_back(*dataptr);
+                    }
+                }
+            }
         }
     }
 
@@ -90,12 +105,15 @@ namespace audio {
 
         if (frame) {
             av_frame_free(&frame);
+            print("free frame")
         }
         if (codecContext) {
             avcodec_free_context(&codecContext);
+            print("free codecContext")
         }
         if (inputContext) {
             avformat_close_input(&inputContext);
+            print("free inputContext")
         }
     }
 }

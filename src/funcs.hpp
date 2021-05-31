@@ -24,6 +24,9 @@
 
 #define elif else if
 
+// vector conversions
 #define sf2box(vec) b2Vec2(vec.x / box2sfRatio, vec.y / box2sfRatio)
 #define box2sf(vec) sf::Vector2f(vec.x * box2sfRatio, vec.y * box2sfRatio)
+#define sf2al(vec) vec.x * sf2alRatio, 0, vec.y * sf2alRatio
+
 #define sqr(x) x*x
