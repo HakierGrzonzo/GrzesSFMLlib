@@ -67,7 +67,7 @@ void gameloop() {
     // get refrence to player
     auto player = testScene.GetEntityByTag(entity::entityTags::player);
     auto cameraPosSmoother = utils::CameraSmoother(
-            sf::Vector2f(50, 50),
+            10,
             player.lock()->position.xy
         );
 
@@ -118,10 +118,10 @@ void gameloop() {
 
         // Refresh view
         if (!player.expired()) {
+            auto playerPhys = player.lock()->GetComponent<component::PhysicsBody>();
             auto postUpdatePos = player.lock()->position;
-            sf::Vector2f newViewPos = (-preUpdatePos.xy + postUpdatePos.xy) * float(25.0) + postUpdatePos.xy;
-            newViewPos = cameraPosSmoother.calculatePosition(
-                    newViewPos, 
+            auto newViewPos = cameraPosSmoother.calculatePosition(
+                    box2sf(playerPhys->body->GetLinearVelocity()),
                     window.getView().getSize(), 
                     postUpdatePos.xy, 
                     timeSinceLastFrame.count()

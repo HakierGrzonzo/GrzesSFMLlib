@@ -5,31 +5,34 @@
 #include <SFML/System/Vector2.hpp>
 
 namespace utils {
-    CameraSmoother::CameraSmoother(sf::Vector2f maxChange_, sf::Vector2f initialiPos) {
-        maxChange = maxChange_;
-        lastChange = sf::Vector2f();
+    CameraSmoother::CameraSmoother(float speedFactor_, sf::Vector2f initialiPos) {
         lastPosition = initialiPos;
-        wasInCenter = true;
+        speedFactor = speedFactor_;
+        lastSpeed = 0;
+        lastVelocity = sf::Vector2f();
     }
 
     sf::Vector2f CameraSmoother::calculatePosition(
-            sf::Vector2f wantedPosition,
+            sf::Vector2f currentVelocity,
             sf::Vector2f bounds,
             sf::Vector2f center,
             double timeStep
             ) {
-        bounds = bounds * .5;
-        sf::Vector2f wantedChange = wantedPosition - lastPosition;
-        sf::Vector2f changeInChange = wantedChange - lastChange;
-        double factor = fmax(200 / (length((lastPosition - center)) + 1), 1)* timeStep;
-        sf::Vector2f allowedChange = maxChange * factor;
-        sf::Vector2f newOffset = lastPosition + lastChange + minimize(
-                changeInChange,
-                ensureSignVec(changeInChange, allowedChange)
-            ) - center;
+        double newSpeed = length(currentVelocity);
+        if (abs(newSpeed - lastSpeed) > speedFactor * timeStep) {
+            if (lastSpeed > newSpeed) {
+                newSpeed = lastSpeed - speedFactor * timeStep;
+            }
+            else {
+                newSpeed = lastSpeed + speedFactor * timeStep;
+            }
+        }
+        lastSpeed = newSpeed;
+        bounds = bounds * float(.5);
+        if (newSpeed == 0) newSpeed += 0.00000001;
+        currentVelocity /= float(newSpeed);
+        sf::Vector2f newOffset = currentVelocity * float(newSpeed);
         newOffset = minimize(newOffset, ensureSignVec(newOffset, bounds));
-        lastChange = newOffset + center - lastPosition;
-        lastPosition = center + newOffset;
-        return lastPosition;
+        return newOffset + center;
     }
 }

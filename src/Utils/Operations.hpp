@@ -5,10 +5,12 @@
 
 // Some vector operations
 
+/*
 template <class T>
 sf::Vector2f operator*(sf::Vector2f vector, T scalar) {
     return sf::Vector2f(vector.x * scalar, vector.y * scalar);
 }
+*/
 
 template <class T> 
 T maximize(T vec1, T vec2) {
