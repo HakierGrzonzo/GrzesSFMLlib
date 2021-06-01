@@ -9,3 +9,4 @@ bool check_al_errors(const std::string filename, const int linenumber, std::stri
 
 #define alCall(var) var; !check_al_errors(__FILE__, __LINE__, #var)
 
+#define SAMPLE_RATE 48000

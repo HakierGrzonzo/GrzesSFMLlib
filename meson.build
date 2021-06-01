@@ -15,6 +15,7 @@ openal = dependency('openal')
 libavcodec = dependency('libavcodec')
 libavutil = dependency('libavutil')
 libavformat = dependency('libavformat')
+libswresample = dependency('libswresample')
 boxerInc = include_directories('../Boxer/include')
 boxer = declare_dependency(link_args: '/lib64/libBoxer.a', include_directories: boxerInc)
 
@@ -58,5 +59,6 @@ executable('GrzesSFMLlib',
              openal,
              libavcodec,
              libavutil,
-             libavformat
+             libavformat,
+             libswresample
              ])

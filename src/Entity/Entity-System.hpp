@@ -3,6 +3,9 @@
 #include "../Component/Component.hpp"
 #include "Entity-Tags.hpp"
 #include "Inputs.hpp"
+#ifndef AudioSceneDefined
+#include "../Audio/AudioScene.hpp"
+#endif
 #define EntitySystemDefined
 #ifndef EntityDefined
     #include "Entity.hpp"
@@ -56,12 +59,15 @@ namespace entity {
             // call FixedUpdate() on all components in all entities, then do box2d physics step
             void doFixedUpdateTick(double timeDelta);
 
+            std::weak_ptr<Entity> getWeakPtr(Entity* entity);
+
             // add Entity to a layer, calls Initialize() on entity, then
             // calls Awake() on components, then LateInitialize() on entity
             std::weak_ptr<Entity> addEntity(Entity* entity, layers layer = layers::normal);
             
             // input handler
             InputDirector inputHandler;
+            audio::AudioScene audioScene;
 
             // destructor
             virtual ~EntitySystem();
@@ -72,3 +78,4 @@ namespace entity {
 
     };
 }
+

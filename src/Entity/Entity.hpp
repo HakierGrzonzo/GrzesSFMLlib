@@ -48,8 +48,6 @@ namespace entity {
         // You can modify components here, called after Awake() on all components
         virtual void LateInitialize();
         virtual ~Entity();
-    protected:
-    private:
     };
 }
 

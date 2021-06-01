@@ -66,10 +66,10 @@ namespace entity {
         for (unsigned long int i = 0; i < entityRef->components.size(); i++) {
             entityRef->components[i]->Awake();
         }
-        entityRef->LateInitialize();
         if (layer == layers::normal) normal.push_back(entityRef);
         elif (layer == layers::back) background.push_back(entityRef);
         else top.push_back(entityRef);
+        entityRef->LateInitialize();
         return std::weak_ptr<Entity>(entityRef);
     }
 
@@ -129,6 +129,19 @@ namespace entity {
             }
         }
         return resultVec;
+    }
+
+    std::weak_ptr<Entity> EntitySystem::getWeakPtr(Entity* entity) {
+        for (const auto i : allLayers) {
+            auto vectorRef = getVectorByLayer(i);
+            for (unsigned long int i = 0; i < vectorRef->size(); i++) {
+                auto compared = vectorRef->operator[](i);
+                if (compared.get() == entity) {
+                    return std::weak_ptr<Entity>(compared);
+                }
+            }
+        }
+        throw std::runtime_error("Failed to find entity!");
     }
 
     void EntitySystem::deleteEntity(const Entity* toDelete) {

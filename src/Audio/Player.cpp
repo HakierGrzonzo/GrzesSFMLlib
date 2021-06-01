@@ -1,6 +1,9 @@
 #include "Player.hpp"
 #include "FFmpegMacros.hpp"
+#include "AudioMacros.hpp"
 #include "../funcs.hpp"
+#include <libavutil/channel_layout.h>
+#include <libswresample/swresample.h>
 extern "C" {
 #include <asm-generic/errno-base.h>
 #include <libavcodec/avcodec.h>
@@ -45,7 +48,27 @@ namespace audio {
         error = avcodec_open2(codecContext, codec, nullptr);
         assertCond(error < 0, "Failed to open decoder context: " + decodeError(error));
 
+        resampleContext = swr_alloc();
+        assertNotNull(resampleContext);
 
+        // Set options for resampler input
+        av_opt_set_int(resampleContext, "in_channel_layout", codecContext->channel_layout, 0);
+        av_opt_set_int(resampleContext, "in_sample_rate", codecContext->sample_rate, 0);
+        av_opt_set_sample_fmt(resampleContext, "in_sample_fmt", codecContext->sample_fmt, 0);
+        
+        // downmix to mono, as stereo is broken for now
+        av_opt_set_int(resampleContext, "out_channel_layout",    AV_CH_LAYOUT_MONO, 0);
+        av_opt_set_int(resampleContext, "out_sample_rate",       SAMPLE_RATE, 0);
+        av_opt_set_sample_fmt(resampleContext, "out_sample_fmt", AV_SAMPLE_FMT_S16, 0);
+
+        error = swr_init(resampleContext);
+        assertCond(error < 0, "Failed to initialize resampling context!")
+
+        resampledFrame = av_frame_alloc();
+        resampledFrame->channel_layout = AV_CH_LAYOUT_MONO;
+        resampledFrame->sample_rate = SAMPLE_RATE;
+        resampledFrame->format = AV_SAMPLE_FMT_S16;
+        assertNotNull(resampledFrame);
         // decode audio
         AVPacket* pkt = av_packet_alloc();
         assertNotNull(pkt);
@@ -53,7 +76,6 @@ namespace audio {
             if (!frame) {
                 // alloc frame
                 frame = av_frame_alloc();
-                print("alloc frame");
                 assertNotNull(frame);
             }
             error = av_read_frame(inputContext, pkt);
@@ -84,11 +106,14 @@ namespace audio {
                 return;
             else if (ret < 0)
                 throw std::runtime_error("Failed to recive frame!");
-            int sampleSize = av_get_bytes_per_sample((AVSampleFormat) frame->format);
-            for (int i = 0; i < frame->nb_samples; i++) {
-                for (int ch = 0; ch < frame->channels; ch++) {
+            // resample frame
+            int error = swr_convert_frame(resampleContext, resampledFrame, frame);
+            assertCond(error < 0, "Failed to resample frame: " + decodeError(error));
+            int sampleSize = av_get_bytes_per_sample((AVSampleFormat) resampledFrame->format);
+            for (int i = 0; i < resampledFrame->nb_samples; i++) {
+                for (int ch = 0; ch < resampledFrame->channels; ch++) {
                     for (int byte = 0; byte < sampleSize; byte++) {
-                        uint8_t* dataptr = frame->data[ch] + i * sampleSize + byte; 
+                        uint8_t* dataptr = resampledFrame->data[ch] + i * sampleSize + byte; 
                         decodedData.push_back(*dataptr);
                     }
                 }
@@ -105,15 +130,15 @@ namespace audio {
 
         if (frame) {
             av_frame_free(&frame);
-            print("free frame")
+        }
+        if (resampledFrame) {
+            av_frame_free(&resampledFrame);
         }
         if (codecContext) {
             avcodec_free_context(&codecContext);
-            print("free codecContext")
         }
         if (inputContext) {
             avformat_close_input(&inputContext);
-            print("free inputContext")
         }
     }
 }

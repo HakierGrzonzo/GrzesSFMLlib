@@ -10,6 +10,8 @@ extern "C" {
 #include <libavutil/mem.h>
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
+#include <libswresample/swresample.h>
+#include <libavutil/opt.h>
 }
 namespace audio {
 
@@ -25,5 +27,7 @@ namespace audio {
             AVFormatContext* inputContext;
             std::vector<uint8_t> decodedData;
             AVFrame* frame;
+            AVFrame* resampledFrame;
+            SwrContext* resampleContext;
     };
 }

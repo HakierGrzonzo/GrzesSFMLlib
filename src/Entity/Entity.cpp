@@ -10,7 +10,7 @@ namespace entity {
         position = position_;
         tag = tag_;
         components = std::vector<std::unique_ptr<component::Component>>();
-	scene = scene_;
+        scene = scene_;
         Initialize();
     }
     void Entity::Initialize() {}

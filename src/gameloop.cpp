@@ -63,8 +63,7 @@ void gameloop() {
         utils::Position(),
         &testScene
     ));
-    audio::AudioScene audioScene;
-    
+
     // get refrence to player
     auto player = testScene.GetEntityByTag(entity::entityTags::player);
     auto cameraPosSmoother = utils::CameraSmoother(
@@ -128,6 +127,7 @@ void gameloop() {
                     timeSinceLastFrame.count()
                 );
             view.setCenter(newViewPos);
+            testScene.audioScene.Update(newViewPos);
             window.setView(view);
         }
 
