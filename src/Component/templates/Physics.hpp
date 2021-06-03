@@ -14,7 +14,7 @@ namespace component {
             PhysicsBody(entity::Entity* parent_);
             b2Body* body;
             std::shared_ptr<b2World> world;
-            void Awake();
+            virtual void Awake();
             void LateFixedUpdate();
             entity::Entity* getParent() const;
             // Called when collision begins
@@ -22,7 +22,7 @@ namespace component {
             // Called when collision ends
             virtual void OnCollisionLeave(PhysicsBody* other);
             virtual ~PhysicsBody();
-        private:
+        protected:
             b2BodyDef bodyDef;
             b2PolygonShape shape;
             b2FixtureDef fixture;

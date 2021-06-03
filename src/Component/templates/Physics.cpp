@@ -35,11 +35,7 @@ namespace component {
     entity::Entity* PhysicsBody::getParent() const{
         return parent;
     }
-    void PhysicsBody::OnCollisionEnter(PhysicsBody* other) {
-        if (other->getParent()->tag == entity::player) {
-            other->getParent()->GetComponent<Creature>()->changeHP(-10);
-        }
-    }
+    void PhysicsBody::OnCollisionEnter(PhysicsBody* other) {}
 
     void PhysicsBody::OnCollisionLeave(PhysicsBody* other) {}
 }
