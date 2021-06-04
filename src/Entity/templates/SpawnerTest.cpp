@@ -7,7 +7,6 @@
 namespace entity {
     SpawnerTest::SpawnerTest(utils::Position position_, EntitySystem* scene_) 
         : entity::Entity(position_, entityTags::test, scene_) {
-        Initialize();
     }
 
     void SpawnerTest::Initialize() {

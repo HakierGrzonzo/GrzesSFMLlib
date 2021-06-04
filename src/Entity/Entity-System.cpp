@@ -4,6 +4,7 @@
 #include "Entity.hpp"
 #include "../Component/templates/Physics.hpp"
 #include "Inputs.hpp"
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_math.h>
 #include <box2d/b2_world.h>
@@ -31,7 +32,8 @@ namespace entity {
         }
     }
 
-    EntitySystem::EntitySystem() {
+    EntitySystem::EntitySystem(sf::RenderWindow* windowRef_) {
+        windowRef = windowRef_;
         background = std::vector<std::shared_ptr<Entity>>();
         normal = std::vector<std::shared_ptr<Entity>>();
         top = std::vector<std::shared_ptr<Entity>>();
@@ -59,6 +61,7 @@ namespace entity {
 
     std::weak_ptr<Entity> EntitySystem::addEntity(Entity* entity, layers layer) {
         auto entityRef = std::shared_ptr<Entity>(entity);
+        entityRef->Initialize();
         auto physics = entityRef->GetComponent<component::PhysicsBody>();
         if (physics != nullptr) {
             physics->world = physicsWorld;

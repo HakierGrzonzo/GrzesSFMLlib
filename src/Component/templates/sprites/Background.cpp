@@ -11,7 +11,6 @@
 namespace component {
     shadedBackground::shadedBackground(entity::Entity* parent_) : Renderable(parent_) {
         renderTarget = sf::RectangleShape();
-        windowref = nullptr;
     }
     void shadedBackground::Awake() {
         Initialize();
@@ -20,11 +19,8 @@ namespace component {
     void shadedBackground::Initialize() {
         shader = utils::ResourceManager::GetShader("shaders/background.frag");
     }
-    void shadedBackground::setView(sf::Window* window) {
-        windowref = dynamic_cast<sf::RenderWindow*>(window);
-    }
     renderStruct shadedBackground::Render() {
-        assertCond(windowref == nullptr, "windowref is not set!\nSet it via setView(window*)");
+        auto windowref = parent->scene->windowRef;
         auto windowSize = sf::Vector2f(windowref->getSize());
         renderTarget.setTextureRect(sf::IntRect(0, 0, windowSize.x, windowSize.y));
         // set drawable size to window size

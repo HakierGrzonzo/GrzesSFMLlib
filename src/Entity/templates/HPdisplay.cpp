@@ -5,7 +5,6 @@
 namespace entity {
     HPdisplayer::HPdisplayer(utils::Position position_, EntitySystem* scene_) 
         : entity::Entity(position_, entityTags::test, scene_) {
-        Initialize();
     }
 
     void HPdisplayer::Initialize() {

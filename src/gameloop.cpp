@@ -24,7 +24,6 @@
 #include "Utils/CameraSmoother.hpp"
 #include "Audio/AudioScene.hpp"
 
-#define playerSpeed .1
 
 void gameloop() {
     // ========================== GAME WINDOW ========================== 
@@ -35,11 +34,11 @@ void gameloop() {
     window.setVerticalSyncEnabled(true);
     
     // create scene
-    entity::EntitySystem testScene = entity::EntitySystem();
+    entity::EntitySystem testScene = entity::EntitySystem(&window);
     // setup background
     testScene.addEntity(new entity::background(
         &testScene
-    ), entity::layers::back).lock()->GetComponent<component::shadedBackground>()->setView(&window);
+    ), entity::layers::back);
     // add test dev entity
     testScene.addEntity(new entity::SpawnerTest(
         utils::Position(0, 600),

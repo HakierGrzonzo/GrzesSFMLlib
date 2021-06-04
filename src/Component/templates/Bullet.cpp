@@ -6,6 +6,8 @@
 
 namespace component {
     Bullet::Bullet(entity::Entity* parent) : PhysicsBody(parent) {
+        deleteAfter = 5;
+        isDone = false;
         damage = -10;
     };
     
@@ -32,6 +34,19 @@ namespace component {
         auto creature = other->getParent()->GetComponent<Creature>();
         if (creature != nullptr) {
             creature->changeHP(-damage);
+            // We cant delete box2d body while physics are working
+            isDone = true;
+        }
+    }
+
+    void Bullet::FixedUpdate(double timeStep) {
+        deleteAfter -= timeStep;
+    }
+
+    void Bullet::LateFixedUpdate() {
+       parent->position.xy = box2sf(body->GetPosition());
+       parent->position.rotation = body->GetAngle();
+        if (isDone || deleteAfter < 0) {
             parent->scene->deleteEntity(parent);
         }
     }

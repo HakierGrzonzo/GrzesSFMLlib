@@ -3,6 +3,8 @@
 #include "../Component/Component.hpp"
 #include "Entity-Tags.hpp"
 #include "Inputs.hpp"
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #ifndef AudioSceneDefined
 #include "../Audio/AudioScene.hpp"
 #endif
@@ -42,7 +44,7 @@ namespace entity {
             std::shared_ptr<b2World> physicsWorld;
 
             // constructor
-            EntitySystem();
+            EntitySystem(sf::RenderWindow* windowRef);
 
             // deletes an entity
             void deleteEntity(const Entity* toDelete);
@@ -67,10 +69,16 @@ namespace entity {
             
             // input handler
             InputDirector inputHandler;
+            
+            // renderTarget
+            sf::RenderWindow* windowRef;
+
+            // audio Scene
             audio::AudioScene audioScene;
 
             // destructor
             virtual ~EntitySystem();
+
         private:
             // get Vector that is connected with layer e.g. back -> background
             std::vector<std::shared_ptr<Entity>>* getVectorByLayer(layers layer);

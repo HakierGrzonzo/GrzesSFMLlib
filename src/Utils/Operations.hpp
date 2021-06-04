@@ -25,7 +25,7 @@ T minimize(T vec1, T vec2) {
 }
 
 template <class T> 
-double length(sf::Vector2<T> vec) {
+T length(sf::Vector2<T> vec) {
     return sqrt(sqr(vec.x) + sqr(vec.y));
 }
 #define explode(vec) vec.x, vec.y

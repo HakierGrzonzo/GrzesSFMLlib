@@ -15,7 +15,6 @@ namespace component {
             shader->setUniform("renderCount", renderCounter);
         }
         void korwin::Initialize() {
-            //assertCond(!texture.loadFromFile("resources/test.png"), "korwin failed to load texture");
             texture = utils::ResourceManager::GetTexture("test.png");
             shader = utils::ResourceManager::GetShader("shaders/testFrag.frag");
             texture->setSmooth(true);

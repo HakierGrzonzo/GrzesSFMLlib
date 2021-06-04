@@ -8,6 +8,8 @@ namespace component {
         public:
             Bullet(entity::Entity* parent);
             void Awake();
+            void LateFixedUpdate();
+            void FixedUpdate(double timeStep);
             // Deal damage and destroy itself
             void OnCollisionEnter(PhysicsBody* other);
             // setDamage for this bullet
@@ -16,5 +18,8 @@ namespace component {
         protected:
             b2CircleShape shape;
             int damage;
+            double deleteAfter;
+        private:
+            bool isDone;
     };
 }

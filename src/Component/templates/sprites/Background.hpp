@@ -22,13 +22,11 @@ namespace component {
         shadedBackground(entity::Entity* parent_);
         virtual void Initialize();
         void Awake() override;
-        void setView(sf::Window* window);
         renderStruct Render() override;
     protected:
         std::unique_ptr<sf::Shader> shader;
     private:
         sf::RectangleShape renderTarget;
-        sf::RenderWindow* windowref = nullptr;
         sf::Vector2f lastSize;
     };
 }

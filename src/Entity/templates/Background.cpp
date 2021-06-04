@@ -5,7 +5,6 @@
 namespace entity {
     background::background(EntitySystem* scene_)
         : entity::Entity(utils::Position(), entityTags::visual, scene_) {
-        Initialize();
     }
     void background::Initialize() {
         add_component(component::shadedBackground);

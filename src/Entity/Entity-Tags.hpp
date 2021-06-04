@@ -5,6 +5,7 @@ namespace entity {
         test,
         enemy,
         player,
+        bullet,
         visual
     };
 }
