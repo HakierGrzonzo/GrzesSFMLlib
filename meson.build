@@ -5,7 +5,7 @@ project('GrzesSFMLlib', 'cpp',
 
 
     add_global_arguments('-g', language : 'cpp')
-    add_global_arguments('-O3', language : 'cpp')
+    add_global_arguments('-O0', language : 'cpp')
     warning('Turning off optimization in debug mode')
 
 sfml = dependency('sfml-all')
