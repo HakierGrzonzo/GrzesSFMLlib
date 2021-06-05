@@ -5,7 +5,7 @@ project('GrzesSFMLlib', 'cpp',
 
 
     add_global_arguments('-g', language : 'cpp')
-    add_global_arguments('-O0', language : 'cpp')
+    add_global_arguments('-O3', language : 'cpp')
     warning('Turning off optimization in debug mode')
 
 sfml = dependency('sfml-all')
@@ -27,6 +27,7 @@ executable('GrzesSFMLlib',
           './src/Entity/templates/SpawnerTest.cpp',
           './src/Entity/templates/HPdisplay.cpp',
           './src/Entity/templates/Bullet.cpp',
+          './src/Entity/templates/Wall.cpp',
           './src/Entity/Entity.cpp',
           './src/Entity/Entity-System.cpp',
           './src/Entity/Inputs.cpp',
@@ -35,8 +36,10 @@ executable('GrzesSFMLlib',
           './src/Component/templates/sprites/Player.cpp',
           './src/Component/templates/sprites/Test.cpp',
           './src/Component/templates/sprites/Bullet.cpp',
+          './src/Component/templates/sprites/Wall.cpp',
           './src/Component/templates/Korwin.cpp',
           './src/Component/templates/Physics.cpp',
+          './src/Component/templates/StaticPhysics.cpp',
           './src/Component/templates/Renderable.cpp',
           './src/Component/templates/ShadedSprite.cpp',
           './src/Component/templates/Sprite.cpp',

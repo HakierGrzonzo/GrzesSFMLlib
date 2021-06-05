@@ -30,3 +30,5 @@
 #define sf2al(vec) vec.x * sf2alRatio, 0, vec.y * sf2alRatio
 
 #define sqr(x) x*x
+
+#define explode(vec) vec.x, vec.y

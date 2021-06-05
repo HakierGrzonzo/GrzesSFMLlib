@@ -18,7 +18,7 @@ namespace component {
         assertCond(world == nullptr, "b2World is not set!");
         bodyDef.type = b2_dynamicBody;
         bodyDef.fixedRotation = true;
-        bodyDef.position.Set(parent->position.xy.x / box2sfRatio, parent->position.xy.y / box2sfRatio);
+        bodyDef.position.Set(explode(sf2box(parent->position.xy)));
         // add `this` as userData for Colision callbacks to work
         bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
         body = world->CreateBody(&bodyDef);
