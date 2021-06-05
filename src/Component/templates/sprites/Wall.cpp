@@ -13,8 +13,8 @@ namespace component {
             texture->setSmooth(true);
             sprite.setTexture(*texture.get());
             sprite.scale(sf::Vector2f(.5, .5));
-            sf::FloatRect spriteSize = sprite.getGlobalBounds();
-            sprite.setOrigin(spriteSize.width / 2., spriteSize.height / 2.);
+            auto spriteSize = getSpriteSize();
+            sprite.setOrigin(explode(spriteSize));
         }
     }
 

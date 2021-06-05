@@ -30,12 +30,12 @@ namespace component {
                     );
                 auto bulletPhys = bullet.lock()->GetComponent<component::Bullet>();
                 assertNotNull(bulletPhys);
-                bulletPhys->setDamage(40);
+                bulletPhys->setDamage(100);
                 auto physBody = parent->GetComponent<component::PhysicsBody>();
                 assertNotNull(physBody);
                 b2Vec2 setSpeed = physBody->body->GetLinearVelocity();
-                setSpeed.x += relativePos.x * 1.5;
-                setSpeed.y += relativePos.y * 1.5;
+                setSpeed.x += relativePos.x * 2.5;
+                setSpeed.y += relativePos.y * 2.5;
                 bulletPhys->body->SetLinearVelocity(setSpeed);
             }
         }

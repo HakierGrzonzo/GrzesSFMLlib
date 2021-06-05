@@ -16,6 +16,6 @@ namespace component {
 
     sf::Vector2f SpriteRenderer::getSpriteSize() {
         auto bounds = sprite.getGlobalBounds();
-        return sf::Vector2f(bounds.width * sprite.getScale().x , bounds.height * sprite.getScale().y);
+        return sf::Vector2f(bounds.width, bounds.height);
     }
 }
