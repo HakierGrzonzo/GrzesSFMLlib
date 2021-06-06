@@ -35,8 +35,8 @@ namespace component {
         if (creature != nullptr) {
             creature->changeHP(-damage);
             // We cant delete box2d body while physics are working
-            isDone = true;
         }
+        isDone = true;
     }
 
     void Bullet::FixedUpdate(double timeStep) {

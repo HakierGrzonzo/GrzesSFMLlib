@@ -3,6 +3,7 @@
 #include "../../../funcs.hpp"
 #include "../../../Utils/ResourceManager.hpp"
 #include "../../../Utils/Operations.hpp"
+#include <SFML/System/Vector2.hpp>
 
 namespace component {
     namespace sprites {
@@ -31,6 +32,9 @@ namespace component {
             auto speed = box2sf(physRef->body->GetLinearVelocity());
             // normalize speed
             speed /= length(speed);
+            // map shader from <-1;1> to <0;1>
+            speed /= float(2);
+            speed += sf::Vector2f(.5, .5);
             shader->setUniform("speed", speed);
         }
     }
