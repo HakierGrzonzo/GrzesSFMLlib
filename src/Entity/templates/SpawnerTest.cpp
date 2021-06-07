@@ -17,7 +17,7 @@ namespace entity {
     void SpawnerTest::LateInitialize() {
         auto spawner = GetComponent<component::Spawner>();
         assertCond(spawner == nullptr, "Spawner is missing");
-        spawner->startSpawning(1, 8000, -1);
+        spawner->startSpawning(.2, 8000, -1);
         scene->audioScene.addSource(
                 scene->getWeakPtr(this),
                 "resources/test.aac",

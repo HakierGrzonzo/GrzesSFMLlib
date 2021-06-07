@@ -19,6 +19,7 @@
 #include "Entity/templates/Background.hpp"
 #include "Entity/templates/SpawnerTest.hpp"
 #include "Entity/templates/HPdisplay.hpp"
+#include "Entity/templates/Wall.hpp"
 #include "Component/templates/sprites/Background.hpp"
 #include "Component/templates/Physics.hpp"
 #include "Utils/CameraSmoother.hpp"
@@ -60,6 +61,12 @@ void gameloop() {
     ));
     testScene.addEntity(new entity::HPdisplayer(
         utils::Position(),
+        &testScene
+    ));
+
+    // add some walls
+    testScene.addEntity(new entity::Wall(
+        utils::Position(500, 500),
         &testScene
     ));
 

@@ -7,3 +7,8 @@ WORK IN PROGRESS
 - SFML
 - Box2D
 - boxer
+- OpenAL[-soft]
+- libvacodec
+- libvaformat
+- libvautils
+- libswresample

@@ -13,4 +13,9 @@ namespace component {
         return renderStruct {&sprite, nullptr};
     }
     void SpriteRenderer::Initialize() {}
+
+    sf::Vector2f SpriteRenderer::getSpriteSize() {
+        auto bounds = sprite.getGlobalBounds();
+        return sf::Vector2f(bounds.width, bounds.height);
+    }
 }
