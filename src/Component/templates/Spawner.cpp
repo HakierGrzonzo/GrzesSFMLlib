@@ -1,5 +1,6 @@
 #include "Spawner.hpp"
 #include "../../funcs.hpp"
+#include "../../Utils/Random.hpp"
 #include <cstdlib>
 #include <math.h>
 
@@ -40,7 +41,7 @@ namespace component {
                 isActive
                 ) {
             // get random x that is -radius < x < radius
-            float x = (float(rand()) / float((RAND_MAX)) * spawnRadius * 2.0 - spawnRadius);
+            float x = (utils::Random::getF(spawnRadius * 2.) - spawnRadius);
             /*
              * Calculate y as point on a circle, according to equation:
              * \[
