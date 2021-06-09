@@ -23,10 +23,12 @@
 #include "Component/templates/sprites/Background.hpp"
 #include "Component/templates/Physics.hpp"
 #include "Utils/CameraSmoother.hpp"
+#include "Utils/Random.hpp"
 #include "Audio/AudioScene.hpp"
 
 
 void gameloop() {
+    utils::Random::init(420);
     // ========================== GAME WINDOW ========================== 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "sfml plswrk");
     sf::View view;
