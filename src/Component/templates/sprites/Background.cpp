@@ -21,7 +21,7 @@ namespace component {
     }
     renderStruct shadedBackground::Render() {
         auto windowref = parent->scene->windowRef;
-        auto windowSize = sf::Vector2f(windowref->getSize());
+        auto windowSize = sf::Vector2f(windowref->getSize()) * parent->scene->zoom[0];
         renderTarget.setTextureRect(sf::IntRect(0, 0, windowSize.x, windowSize.y));
         // set drawable size to window size
         renderTarget.setSize(windowSize);

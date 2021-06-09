@@ -30,12 +30,14 @@ void gameloop() {
     // ========================== GAME WINDOW ========================== 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "sfml plswrk");
     sf::View view;
+    float currentZoom = 2.;
     view.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+    view.zoom(currentZoom);
     view.setCenter(100.f, 100.f);
     window.setVerticalSyncEnabled(true);
     
     // create scene
-    entity::EntitySystem testScene = entity::EntitySystem(&window);
+    entity::EntitySystem testScene = entity::EntitySystem(&window, &currentZoom);
     // setup background
     testScene.addEntity(new entity::background(
         &testScene
@@ -46,7 +48,7 @@ void gameloop() {
         &testScene
     ));
     // add 2x korwin
-    auto thatKoriwn = testScene.addEntity(new entity::tests::korwintest(
+    testScene.addEntity(new entity::tests::korwintest(
         utils::Position(6, 0),
         &testScene
     ));
@@ -94,6 +96,7 @@ void gameloop() {
                 // handle changed window size
                 auto windowSize = window.getSize();
                 view.setSize((float) windowSize.x, (float) windowSize.y);
+                view.zoom(currentZoom);
                 print("Window size changed!");
                 printVec2(windowSize);
             }
@@ -101,14 +104,17 @@ void gameloop() {
         auto now = std::chrono::steady_clock::now();
         std::chrono::duration<double> timeSinceLastFrame = now - lastTime;
         lastTime = now;
-        // print fps
-        std::cout << "fps: " << 1.0 / timeSinceLastFrame.count() << "\tframetime: " << timeSinceLastFrame.count() << "\tentities: " <<
-            testScene.background.size() + testScene.normal.size() + testScene.top.size() << "\r"; 
+        // print fps and other stats
+        std::cout << "fps: " <<
+            1.0 / timeSinceLastFrame.count() <<
+            "\tframetime: " <<
+            timeSinceLastFrame.count() <<
+            "\tentities: " <<
+            testScene.background.size() +
+                testScene.normal.size() +
+                testScene.top.size() <<
+            "\r"; 
         std::cout.flush();
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::K) && !thatKoriwn.expired()) {
-            testScene.deleteEntity(thatKoriwn.lock().get());
-        }
 
         // not-so-simple movement mechanics
         b2Vec2 playerForce {0, 0};

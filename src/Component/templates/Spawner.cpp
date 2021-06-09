@@ -15,7 +15,7 @@ namespace component {
         timeSinceLastSpawn = 0;
         isActive = false;
         limit = -1;
-        srand(time(nullptr));
+        //srand(time(nullptr));
     }
 
     void Spawner::stopSpawning() {

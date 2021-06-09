@@ -44,7 +44,7 @@ namespace entity {
             std::shared_ptr<b2World> physicsWorld;
 
             // constructor
-            EntitySystem(sf::RenderWindow* windowRef);
+            EntitySystem(sf::RenderWindow* windowRef, float* zoom);
 
             // deletes an entity
             void deleteEntity(const Entity* toDelete);
@@ -75,7 +75,9 @@ namespace entity {
 
             // audio Scene
             audio::AudioScene audioScene;
-
+            
+            // pointer to zoom factor
+            float* zoom;
             // destructor
             virtual ~EntitySystem();
 

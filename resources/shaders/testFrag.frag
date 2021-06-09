@@ -2,10 +2,14 @@ uniform sampler2D texture;
 uniform float renderCount;
 
 void main() {
-    vec2 coord = gl_TexCoord[0].xy;
-    coord.x = coord.x + sin(coord.y * 2.0 + renderCount) / 16.;
-    vec4 pixel = texture2D(texture, coord);
-    pixel.r = sin(gl_TexCoord[0].x + renderCount) / 2.0 + 0.5;
-    pixel.g = sin(gl_TexCoord[0].y + renderCount / 10.0) / 2.0 + 0.5;
-    gl_FragColor = gl_Color * pixel;
+    vec2 uv = gl_TexCoord[0].xy;
+    // pixalate if under 5 sec
+    if (renderCount < 5.) {
+        float factor = pow(2., floor(renderCount));
+        uv = floor(uv * factor) / factor;
+    } else {
+        // move after 5 sec
+        uv.x += sin(renderCount - 5.) / 30.;
+    }
+    gl_FragColor = texture2D(texture, uv) * gl_Color;
 }

@@ -32,8 +32,9 @@ namespace entity {
         }
     }
 
-    EntitySystem::EntitySystem(sf::RenderWindow* windowRef_) {
+    EntitySystem::EntitySystem(sf::RenderWindow* windowRef_, float* zoom_) {
         windowRef = windowRef_;
+        zoom = zoom_;
         background = std::vector<std::shared_ptr<Entity>>();
         normal = std::vector<std::shared_ptr<Entity>>();
         top = std::vector<std::shared_ptr<Entity>>();
