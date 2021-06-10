@@ -87,20 +87,43 @@ namespace utils {
         return shader;
     }
 
+    std::shared_ptr<audio::Player> ResourceManager::GetPlayer(std::string name) {
+        std::shared_ptr<audio::Player> playerRef;
+        try {
+            playerRef = audioCache.at(name);
+        }
+        catch (...) {
+            print("Loading asset: " + name);
+            playerRef = std::shared_ptr<audio::Player>(
+                    new audio::Player(GetPrefix() + name));
+            audioCache.emplace(name, playerRef);
+        }
+        return playerRef;
+    }
+
     std::map<std::string, std::shared_ptr<sf::Texture>> ResourceManager::textureCache =
         std::map<std::string, std::shared_ptr<sf::Texture>>();
     std::map<std::string, std::shared_ptr<sf::Font>> ResourceManager::fontCache =
         std::map<std::string, std::shared_ptr<sf::Font>>();
+    std::map<std::string, std::shared_ptr<audio::Player>> ResourceManager::audioCache =
+        std::map<std::string, std::shared_ptr<audio::Player>>();
     std::map<std::string, std::shared_ptr<std::vector<uint8_t>>> ResourceManager::loadedBytes =
         std::map<std::string, std::shared_ptr<std::vector<uint8_t>>>();
     std::map<std::string, std::string> ResourceManager::loadedShaders =
         std::map<std::string, std::string>();
 
     void ResourceManager::Flush() {
-        unsigned long long int resourceNumber = textureCache.size() + fontCache.size() + loadedShaders.size();
+        unsigned long long int resourceNumber = 
+            textureCache.size() + 
+            fontCache.size() + 
+            audioCache.size() +
+            loadedBytes.size() +
+            loadedShaders.size();
         textureCache.clear();
         fontCache.clear();
         loadedShaders.clear();
+        loadedBytes.clear();
+        audioCache.clear();
         print(resourceNumber);
     }
 }

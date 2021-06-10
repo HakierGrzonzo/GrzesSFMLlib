@@ -15,21 +15,23 @@ namespace entity {
 
 namespace audio {
     struct source {
-        std::unique_ptr<Player> player;
+        std::shared_ptr<Player> player;
         std::weak_ptr<entity::Entity> owner;
         ALuint buffer;
         ALuint source;
+        sf::Vector2f lastPos;
     };
     class AudioScene {
         public:
             AudioScene();
-            void Update(sf::Vector2f refrencePos);
+            void Update(sf::Vector2f refrencePos, double timedelta);
             std::weak_ptr<source> addSource(
                     std::weak_ptr<entity::Entity> owner, 
                     std::string filename, 
                     float gain = 1, 
                     bool looping = false
                 );
+            unsigned long long getSourceSize();
             virtual ~AudioScene();
         private:
             ALCdevice* alDevice;

@@ -8,6 +8,7 @@
 #include <libavcodec/codec_id.h>
 #include <memory>
 #include <stdexcept>
+#include <vector>
 #include "Player.hpp"
 #include "../Utils/ResourceManager.hpp"
 
@@ -24,19 +25,27 @@ namespace audio {
         assertCond(contextMadeCurrent != ALC_TRUE || !success, "Failed to set context current!");
     }
 
-    void AudioScene::Update(sf::Vector2f refrencePos) {
+    void AudioScene::Update(sf::Vector2f refrencePos, double timedelta) {
+        auto newSources = std::vector<std::shared_ptr<source>>();
         for (unsigned long long i = 0; i < sources.size(); i++) {
-            if (sources[i]->owner.expired()) {
-                print("Deleting source!");
+            ALint state = AL_PLAYING;
+            alCall(alGetSourcei(sources[i]->source, AL_SOURCE_STATE, &state));
+            if (sources[i]->owner.expired() || state != AL_PLAYING) {
                 alCall(alDeleteSources(1, &sources[i]->source));
                 alCall(alDeleteBuffers(1, &sources[i]->buffer));
             } else {
-                sf::Vector2f newPos = sources[i]->owner.lock()->position.xy - refrencePos;
+                const sf::Vector2f currentPos = sources[i]->owner.lock()->position.xy;
+                sf::Vector2f newPos = currentPos - refrencePos;
+                sf::Vector2f velocity = newPos - sources[i]->lastPos;
+                velocity /= float(timedelta);
+                sources[i]->lastPos = newPos;
                 alCall(alSource3f(sources[i]->source, AL_POSITION, sf2al(newPos)));
-                // todo velocity
+                alCall(alSource3f(sources[i]->source, AL_VELOCITY, sf2al(velocity)));
+                newSources.push_back(sources[i]);
             }
         }
         lastPos = refrencePos;
+        sources = newSources;
     }
     
     std::weak_ptr<source> AudioScene::addSource(
@@ -45,10 +54,9 @@ namespace audio {
             float gain, 
             bool looping
         ) {
-        print("Adding player for: " + filename);
         assertCond(owner.expired(), "What are you drinking?");
         auto sourceRef = std::shared_ptr<source>(new source {
-                std::unique_ptr<Player>(new Player(filename))
+                utils::ResourceManager::GetPlayer(filename)
             });
         sourceRef->owner = owner;
         ALenum format = AL_FORMAT_MONO16;
@@ -60,6 +68,7 @@ namespace audio {
         alCall(alSourcef(sourceRef->source, AL_GAIN, gain));
         // set position
         sf::Vector2f pos = owner.lock()->position.xy - lastPos;
+        sourceRef->lastPos = pos;
         alCall(alSource3f(sourceRef->source, AL_POSITION, sf2al(pos)));
         // todo velocity
         alCall(alSource3f(sourceRef->source, AL_VELOCITY, 0, 0, 0));
@@ -68,6 +77,10 @@ namespace audio {
         alCall(alSourcePlay(sourceRef->source));
         sources.push_back(sourceRef);
         return std::weak_ptr<source>(sourceRef);
+    }
+
+    unsigned long long AudioScene::getSourceSize() {
+        return sources.size();
     }
 
     AudioScene::~AudioScene() {

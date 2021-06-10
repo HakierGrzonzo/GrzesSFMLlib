@@ -37,6 +37,11 @@ namespace component {
                 setSpeed.x += relativePos.x * 1.5;
                 setSpeed.y += relativePos.y * 1.5;
                 bulletPhys->body->SetLinearVelocity(setSpeed);
+                // Play sound
+                parent->scene->audioScene.addSource(
+                    bullet,
+                    "sfx/shoot1.wav.aac"
+                );
             }
         }
 

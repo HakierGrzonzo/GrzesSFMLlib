@@ -20,8 +20,7 @@ namespace entity {
         spawner->startSpawning(2, 2000, -1);
         scene->audioScene.addSource(
                 scene->getWeakPtr(this),
-                "resources/test.aac",
-                //"/home/hakiergrzonzo/Videos/Zbigniew Stonoga po wyborach-xyPUJmOM94I.m4a",
+                "test.aac",
                 1,
                 true
             );

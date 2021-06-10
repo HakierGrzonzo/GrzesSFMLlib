@@ -112,6 +112,8 @@ void gameloop() {
         auto now = std::chrono::steady_clock::now();
         std::chrono::duration<double> timeSinceLastFrame = now - lastTime;
         lastTime = now;
+        // Clear line
+        std::cout << "\33[2K";
         // print fps and other stats
         std::cout << "fps: " <<
             1.0 / timeSinceLastFrame.count() <<
@@ -121,6 +123,8 @@ void gameloop() {
             testScene.background.size() +
                 testScene.normal.size() +
                 testScene.top.size() <<
+            "\tsources: " <<
+            testScene.audioScene.getSourceSize() <<
             "\r"; 
         std::cout.flush();
 
@@ -147,7 +151,7 @@ void gameloop() {
                     timeSinceLastFrame.count()
                 );
             view.setCenter(newViewPos);
-            testScene.audioScene.Update(newViewPos);
+            testScene.audioScene.Update(newViewPos, timeSinceLastFrame.count());
             window.setView(view);
         }
 
