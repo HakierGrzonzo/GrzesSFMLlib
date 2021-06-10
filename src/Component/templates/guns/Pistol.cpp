@@ -9,7 +9,7 @@
 namespace component {
     namespace guns {
         Pistol::Pistol(entity::Entity* parent) : component::Gun(parent) {
-            shootingSpeed = .05;
+            shootingSpeed = .35;
             timeSinceLastShot = 0;
         }
 
@@ -30,7 +30,7 @@ namespace component {
                     );
                 auto bulletPhys = bullet.lock()->GetComponent<component::Bullet>();
                 assertNotNull(bulletPhys);
-                bulletPhys->setDamage(10);
+                bulletPhys->setDamage(50);
                 auto physBody = parent->GetComponent<component::PhysicsBody>();
                 assertNotNull(physBody);
                 b2Vec2 setSpeed = physBody->body->GetLinearVelocity();

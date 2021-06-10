@@ -7,7 +7,7 @@
 #include "../funcs.hpp"
 
 namespace entity {
-    const std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789__________();,.\"/\\~=- __\t______+-*/lrud0123456789_________________";
+    const std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789__________();,.\"/\\~=- __\t______+-*/lrud0123456789";
 
     callBackContainer::callBackContainer() {
         arg = nullptr;
@@ -28,9 +28,14 @@ namespace entity {
         }
     }
     
-    std::shared_ptr<callBackContainer> InputDirector::subscribe(sf::Keyboard::Key key, void (*callback)(void*), void* arg) {
-        if (subscriberMap[key].expired()) {
-            // key is not bound to anything
+    std::shared_ptr<callBackContainer> 
+    InputDirector::subscribe(
+            sf::Keyboard::Key key, 
+            void (*callback)(void*), 
+            void* arg,
+            bool force) {
+        if (subscriberMap[key].expired() || force) {
+            // key is not bound to anything or we force assingment
             assertCond(callback == nullptr, "callback is null!");
             auto callbackElement = std::make_shared<callBackContainer>(callBackContainer(arg, callback));
             subscriberMap[key] = std::weak_ptr<callBackContainer>(callbackElement);

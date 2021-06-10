@@ -26,13 +26,18 @@
 #include "Utils/Random.hpp"
 #include "Audio/AudioScene.hpp"
 
+float getScale(int height, int width) {
+    float combinedRes = height + width;
+    return resolutionRatio * (1 / combinedRes);
+}
 
 void gameloop() {
-    utils::Random::init(420);
+    utils::Random::init(640);
     // ========================== GAME WINDOW ========================== 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "sfml plswrk");
     sf::View view;
-    float currentZoom = 2.;
+    float currentZoom = getScale(SCREEN_WIDTH, SCREEN_HEIGHT);
+    print(currentZoom);
     view.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     view.zoom(currentZoom);
     view.setCenter(100.f, 100.f);
@@ -98,6 +103,7 @@ void gameloop() {
                 // handle changed window size
                 auto windowSize = window.getSize();
                 view.setSize((float) windowSize.x, (float) windowSize.y);
+                currentZoom = getScale(explode(windowSize));
                 view.zoom(currentZoom);
                 print("Window size changed!");
                 printVec2(windowSize);
