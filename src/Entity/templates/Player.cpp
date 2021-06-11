@@ -19,7 +19,6 @@ namespace entity {
         add_component(component::Creature);
         add_component(component::PlayerControler);
         add_component(component::guns::Pistol);
-        add_component(component::Debug);
     }
     
     void playerEntity::LateInitialize() {

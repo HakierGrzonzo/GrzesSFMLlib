@@ -13,7 +13,7 @@ namespace component {
     }
 
     void Debug::Update() {
-        printId(parent->scene->getEntitiesInRadius(parent, 4000).size());
+        //printId(parent->scene->getEntitiesInRadius(parent, 4000).size());
     }
 
     void Debug::FixedUpdate(double timestep) {

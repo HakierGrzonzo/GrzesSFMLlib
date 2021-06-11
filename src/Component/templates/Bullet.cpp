@@ -1,6 +1,7 @@
 #include "Bullet.hpp"
 #include "Creature.hpp"
 #include "Physics.hpp"
+#include "../../Entity/templates/Explosion.hpp"
 #include <box2d/b2_body.h>
 #include "../../funcs.hpp"
 
@@ -44,9 +45,14 @@ namespace component {
     }
 
     void Bullet::LateFixedUpdate() {
-       parent->position.xy = box2sf(body->GetPosition());
-       parent->position.rotation = body->GetAngle();
+        parent->position.xy = box2sf(body->GetPosition());
+        parent->position.rotation = body->GetAngle();
         if (isDone || deleteAfter < 0) {
+            parent->scene->addEntity(
+                    new entity::Explosion(
+                        parent->position,
+                        parent->scene
+                    ));
             parent->scene->deleteEntity(parent);
         }
     }

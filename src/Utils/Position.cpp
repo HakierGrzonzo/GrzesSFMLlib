@@ -3,7 +3,7 @@
 #include "../constants.hpp"
 
 // define a square macro
-#define sqr(x) x*x
+#define sqr(x) ((x)*(x))
 
 using namespace utils;
 
@@ -24,9 +24,7 @@ Position::Position(sf::Vector2f vec, float angle) {
 }
 
 float Position::distanceTo(const Position& other) {
-    return sqrt(
-        sqr(xy.x + other.xy.x) + sqr(xy.y + other.xy.y)
-    );
+    return sqrt(sqr(xy.x - other.xy.x) + sqr(xy.y - other.xy.y));
 }
 
 void Position::pointTo(const Position& target) {
