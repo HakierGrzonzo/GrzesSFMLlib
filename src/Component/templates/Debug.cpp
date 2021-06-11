@@ -7,27 +7,22 @@
 namespace component {
     Debug::Debug(entity::Entity* parent_) : Component(parent_) {
         id = idCounter++;
-        printId("Constructor");
     }
 
     void Debug::Awake() {
-        printId("Awake()");
     }
 
     void Debug::Update() {
-        printId("Update()");
+        printId(parent->scene->getEntitiesInRadius(parent, 4000).size());
     }
 
     void Debug::FixedUpdate(double timestep) {
-        printId("FixedUpdate(" + std::to_string(timestep) + ")");
     }
 
     void Debug::LateFixedUpdate() {
-        printId("LateFixedUpdate()");
     }
 
     Debug::~Debug() {
-        printId("Deconstructor");
     }
 
     unsigned int Debug::idCounter = 0;

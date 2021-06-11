@@ -1,10 +1,12 @@
 #include "Entity-System.hpp"
+#include "ChunkCoord.hpp"
 #include "Entity-Tags.hpp"
 #include "../funcs.hpp"
 #include "Entity.hpp"
 #include "../Component/templates/Physics.hpp"
 #include "Inputs.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_math.h>
 #include <box2d/b2_world.h>
@@ -78,7 +80,24 @@ namespace entity {
     }
 
     void EntitySystem::doUpdateTick() {
+        // do chunkCache update
+        chunkCache = new std::unordered_map<sf::Vector2i, std::vector<std::weak_ptr<Entity>>, coordHash>();
+        for (const auto i : allLayers) {
+            auto vectorRef = getVectorByLayer(i);
+            for (unsigned long int i = 0; i < vectorRef->size(); i++) {
+                auto entity = vectorRef->operator[](i);
+                auto coord = getChunkCoord(entity->position.xy);
+                try {
+                    chunkCache->at(coord).push_back(entity);
+                } catch (...) {
+                    chunkCache->emplace(coord, std::vector<std::weak_ptr<Entity>>());
+                    chunkCache->at(coord).push_back(entity);
+                }
+            }
+        }
+        // do input funcs
         inputHandler.doTick();
+        // do component Update()
         for (const auto i : allLayers) {
             auto vectorRef = getVectorByLayer(i);
             for (unsigned long int i = 0; i < vectorRef->size(); i++) {
@@ -165,5 +184,38 @@ namespace entity {
         return;
     }
 
-    EntitySystem::~EntitySystem() {}
+    std::vector<std::weak_ptr<Entity>>
+    EntitySystem::getEntitiesInRadius(Entity* refrence, float radius, bool ignoreBullets) {
+        assertNotNull(chunkCache);
+        auto res = std::vector<std::weak_ptr<Entity>>();
+        auto topChunk = getChunkCoord(sf::Vector2f(refrence->position.xy.x + radius, refrence->position.xy.y + radius));
+        auto bottomChunk = getChunkCoord(sf::Vector2f(refrence->position.xy.x - radius, refrence->position.xy.y - radius));
+        for (float x = bottomChunk.x; x <= topChunk.x; x++) {
+            for (float y = bottomChunk.y; y <= topChunk.y; y++) {
+                auto currentChunk = sf::Vector2i(x, y);
+                try {
+                    auto entities = &chunkCache->at(currentChunk);
+                    for (unsigned long long i = 0; i < entities->size(); i++) {
+                        auto current = entities->operator[](i);
+                        if (!current.expired()) {
+                            auto currentRef = current.lock();
+                            if (refrence->position.distanceTo(currentRef->position) < radius
+                                    && currentRef.get() != refrence) {
+                                if (currentRef->tag != bullet || !ignoreBullets)
+                                    res.push_back(current);
+                            }
+                        }
+                    }
+                } catch (...) {
+                    //print("Empty chunk");
+                    //printVec2(currentChunk);
+                }
+            }
+        }
+        return res;
+    }
+    EntitySystem::~EntitySystem() {
+        if (chunkCache)
+            delete chunkCache;
+    }
 }

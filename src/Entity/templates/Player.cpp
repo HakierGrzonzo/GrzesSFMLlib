@@ -3,6 +3,7 @@
 #include "../../Component/templates/Physics.hpp"
 #include "../../Component/templates/Creature.hpp"
 #include "../../Component/templates/playerControler.hpp"
+#include "../../Component/templates/Debug.hpp"
 #include "../../Component/templates/sprites/Player.hpp"
 #include "../../Component/templates/guns/Pistol.hpp"
 #include <box2d/b2_math.h>
@@ -18,6 +19,7 @@ namespace entity {
         add_component(component::Creature);
         add_component(component::PlayerControler);
         add_component(component::guns::Pistol);
+        add_component(component::Debug);
     }
     
     void playerEntity::LateInitialize() {

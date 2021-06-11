@@ -12,7 +12,7 @@ namespace component {
             parent->scene->audioScene.addSource(
                     parent->scene->getWeakPtr(parent),
                     "sfx/bulletsound.wav.aac",
-                    .8,
+                    .4,
                     true
                 );
         }
