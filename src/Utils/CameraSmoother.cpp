@@ -5,6 +5,8 @@
 #include <SFML/System/Vector2.hpp>
 
 namespace utils {
+    CameraSmoother::CameraSmoother() {};
+
     CameraSmoother::CameraSmoother(float speedFactor_, sf::Vector2f initialiPos) {
         lastPosition = initialiPos;
         speedFactor = speedFactor_;

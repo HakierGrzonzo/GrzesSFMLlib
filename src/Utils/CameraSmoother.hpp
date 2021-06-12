@@ -5,6 +5,7 @@
 namespace utils {
     class CameraSmoother {
         public:
+            CameraSmoother();
             CameraSmoother(float speedFactor, sf::Vector2f initialPos);
             // maxChange in position change per second
             sf::Vector2f calculatePosition(

@@ -7,13 +7,22 @@
 #include "Inputs.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_math.h>
 #include <box2d/b2_world.h>
 #include <box2d/b2_world_callbacks.h>
+#include <chrono>
+#include <ctime>
 #include <memory>
 #include <stdexcept>
 #include <vector> 
+
+float getScale(int height, int width) {
+    float combinedRes = height + width;
+    return resolutionRatio * (1 / combinedRes);
+}
 
 namespace entity {
 
@@ -34,9 +43,13 @@ namespace entity {
         }
     }
 
-    EntitySystem::EntitySystem(sf::RenderWindow* windowRef_, float* zoom_) {
+    EntitySystem::EntitySystem(sf::RenderWindow* windowRef_) {
+        // setup view
         windowRef = windowRef_;
-        zoom = zoom_;
+        zoom = getScale(explode(windowRef->getSize()));
+        view.setSize(explode(windowRef->getSize()));
+        view.zoom(zoom);
+        //view.setCenter(100.f, 100.f);
         background = std::vector<std::shared_ptr<Entity>>();
         normal = std::vector<std::shared_ptr<Entity>>();
         top = std::vector<std::shared_ptr<Entity>>();
@@ -46,6 +59,114 @@ namespace entity {
         physicsWorld->SetContactListener(&contactListener);
 
         inputHandler = InputDirector();
+        lastTime = std::chrono::steady_clock::now();
+        isSmoothed = false;
+    }
+
+    void EntitySystem::doTick() {
+        // get time since last frame
+        auto now = std::chrono::steady_clock::now();
+        std::chrono::duration<double> timeSpan = now - lastTime;
+        double timeSinceLastFrame = timeSpan.count();
+        lastTime = now;
+
+        // if window is not focused -> slow motion;
+        if(!windowRef->hasFocus()) {
+            timeSinceLastFrame /= 50;
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)){
+            timeSinceLastFrame /= 5;
+        }
+
+        // poll for resize event
+        sf::Event event;
+        while (windowRef->pollEvent(event)) {
+            if (event.type == sf::Event::Closed) 
+                windowRef->close();
+            if (event.type == sf::Event::EventType::Resized) {
+                // handle changed window size
+                auto windowSize = windowRef->getSize();
+                view.setSize((float) windowSize.x, (float) windowSize.y);
+                zoom = getScale(explode(windowSize));
+                view.zoom(zoom);
+                print("Window size changed!");
+                printVec2(windowSize);
+            }
+        }
+
+        // Clear line
+        std::cout << "\33[2K";
+        // print fps and other stats
+        std::cout << "fps: " <<
+            1.0 / timeSpan.count() <<
+            "\tframetime: " <<
+            timeSinceLastFrame <<
+            "\tentities: " <<
+                background.size() +
+                normal.size() +
+                top.size() <<
+            "\tsources: " <<
+            audioScene.getSourceSize() <<
+            "\r"; 
+        std::cout.flush();
+        
+        bool doFocus = false;
+        utils::Position preUpdatePos;
+        if (!focusedEntity.expired()) {
+            doFocus = true;
+            preUpdatePos = focusedEntity.lock()->position;
+        }
+
+        doUpdateTick();
+
+        doFixedUpdateTick(timeSinceLastFrame);
+        
+        // do Camera movement
+        if (doFocus && !focusedEntity.expired()) {
+            auto focusedPhys = focusedEntity.lock()->
+                GetComponent<component::PhysicsBody>();
+            sf::Vector2f newViewPos;
+            if (focusedPhys) {
+                if (!isSmoothed) {
+                    smoother = utils::CameraSmoother(
+                        10,
+                        preUpdatePos.xy
+                    );
+                    isSmoothed = true;
+                }
+                newViewPos = smoother.calculatePosition(
+                    box2sf(focusedPhys->body->GetLinearVelocity()),
+                    view.getSize(),
+                    focusedEntity.lock()->position.xy,
+                    timeSinceLastFrame
+                );
+            } else {
+                isSmoothed = false;
+                newViewPos = focusedEntity.lock()->position.xy;
+            }
+            view.setCenter(newViewPos);
+            audioScene.Update(newViewPos, timeSinceLastFrame);
+            windowRef->setView(view);
+        }
+
+        // do rendering
+        windowRef->clear();
+        for (const auto i : allLayers) {
+            auto vectorRef = getVectorByLayer(i);
+            for (unsigned long int i = 0; i < vectorRef->size(); i++) {
+                auto entity = vectorRef->operator[](i);
+                auto rendererable = entity->GetComponent<component::Renderable>();
+                if (rendererable) {
+                    auto renderStruct = rendererable->Render();
+                    assertNotNull(renderStruct.drawable);
+                    if (renderStruct.shader) {
+                        windowRef->draw(*(renderStruct.drawable), renderStruct.shader);
+                    } else {
+                        windowRef->draw(*(renderStruct.drawable));
+                    }
+                }
+            }
+        }
+        windowRef->display();
     }
 
     std::vector<std::shared_ptr<Entity>>* EntitySystem::getVectorByLayer(layers layer) {
@@ -95,8 +216,10 @@ namespace entity {
                 }
             }
         }
-        // do input funcs
-        inputHandler.doTick();
+        // do input funcs if focused
+        if (windowRef->hasFocus()) {
+            inputHandler.doTick();
+        }
         // do component Update()
         for (const auto i : allLayers) {
             auto vectorRef = getVectorByLayer(i);
