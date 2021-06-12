@@ -24,7 +24,7 @@ namespace audio {
     class AudioScene {
         public:
             AudioScene();
-            void Update(sf::Vector2f refrencePos, double timedelta);
+            void Update(sf::Vector2f refrencePos, double timedelta, float slowdown);
             std::weak_ptr<source> addSource(
                     std::weak_ptr<entity::Entity> owner, 
                     std::string filename, 

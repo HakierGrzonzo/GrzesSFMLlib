@@ -25,7 +25,7 @@ namespace audio {
         assertCond(contextMadeCurrent != ALC_TRUE || !success, "Failed to set context current!");
     }
 
-    void AudioScene::Update(sf::Vector2f refrencePos, double timedelta) {
+    void AudioScene::Update(sf::Vector2f refrencePos, double timedelta, float slowdown) {
         auto newSources = std::vector<std::shared_ptr<source>>();
         for (unsigned long long i = 0; i < sources.size(); i++) {
             ALint state = AL_PLAYING;
@@ -41,6 +41,7 @@ namespace audio {
                 sources[i]->lastPos = newPos;
                 alCall(alSource3f(sources[i]->source, AL_POSITION, sf2al(newPos)));
                 alCall(alSource3f(sources[i]->source, AL_VELOCITY, sf2al(velocity)));
+                alCall(alSourcef(sources[i]->source, AL_PITCH, 1 / slowdown));
                 newSources.push_back(sources[i]);
             }
         }

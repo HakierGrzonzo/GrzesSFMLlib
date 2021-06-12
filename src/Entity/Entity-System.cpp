@@ -69,13 +69,14 @@ namespace entity {
         std::chrono::duration<double> timeSpan = now - lastTime;
         double timeSinceLastFrame = timeSpan.count();
         lastTime = now;
-
+        float slowdown = 1;
         // if window is not focused -> slow motion;
         if(!windowRef->hasFocus()) {
-            timeSinceLastFrame /= 50;
+            slowdown = 50;
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)){
-            timeSinceLastFrame /= 5;
+            slowdown = 2;
         }
+        timeSinceLastFrame /= slowdown;
 
         // poll for resize event
         sf::Event event;
@@ -144,7 +145,7 @@ namespace entity {
                 newViewPos = focusedEntity.lock()->position.xy;
             }
             view.setCenter(newViewPos);
-            audioScene.Update(newViewPos, timeSinceLastFrame);
+            audioScene.Update(newViewPos, timeSinceLastFrame, slowdown);
             windowRef->setView(view);
         }
 
