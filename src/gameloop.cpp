@@ -10,6 +10,7 @@
 #include <SFML/Window/WindowStyle.hpp>
 #include <box2d/b2_math.h>
 #include <cstdlib>
+#include <ostream>
 #include <stdexcept>
 #include "Component/Component.hpp"
 #include "Entity/Entity-System.hpp"
@@ -43,6 +44,13 @@ void gameloop() {
         settings
     );
     window.setVerticalSyncEnabled(true);
+    std::cout << "OpenGL version: " << window.getSettings().majorVersion << 
+        '.' << window.getSettings().minorVersion << std::endl;
+
+    assertCond(
+        window.getSettings().majorVersion < 3,
+        "You need OpenGL 3.0 or better to play this game"
+    );
     
     // create scene
     entity::EntitySystem testScene = entity::EntitySystem(&window);

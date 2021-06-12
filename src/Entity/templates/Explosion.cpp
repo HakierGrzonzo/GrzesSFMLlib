@@ -1,4 +1,5 @@
 #include "Explosion.hpp"
+#include "../../Component/templates/sprites/Explosion.hpp"
 #include "../../funcs.hpp"
 
 namespace entity {
@@ -7,5 +8,6 @@ namespace entity {
 
     void Explosion::Initialize() {
         add_component(component::Explosion);
+        add_component(component::sprites::Explosion);
     }
 }

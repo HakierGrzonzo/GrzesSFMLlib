@@ -8,6 +8,10 @@ namespace component {
         range = 400;
     }
     
+    float Explosion::getRange() {
+        return range;
+    }
+
     void Explosion::Update() {
         if (!hadExploded) {
             hadExploded = true;
@@ -26,7 +30,6 @@ namespace component {
                     ));
                 }
             }
-            parent->scene->deleteEntity(parent);
         }
     }
 

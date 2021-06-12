@@ -11,6 +11,7 @@ namespace component {
             // normalized distance 
             virtual int dealDamage(float distance);
             void Update();
+            float getRange();
         protected:
             bool hadExploded;
             float range;
