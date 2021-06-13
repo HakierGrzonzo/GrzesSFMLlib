@@ -1,0 +1,30 @@
+digraph G {
+	//splines="FALSE";
+	subgraph cluster_Entity {
+		EntitySystem;
+		Input;
+		Entity;
+		label="namespace entity";
+	}
+	subgraph cluster_Component {
+		Component;
+		label="namespace component";
+	}
+	subgraph cluster_Audio {
+		AudioScene;
+		Player;
+		label="namespace audio";
+	}
+	subgraph cluster_Utils {
+		ResourceManager;
+		CameraSmoother;
+		Random;
+		label="namespace utils";
+	}
+	EntitySystem -> AudioScene;
+	EntitySystem -> Input;
+	EntitySystem -> Entity;
+	EntitySystem -> CameraSmoother;
+	Entity -> Component;
+	AudioScene -> Player;
+}

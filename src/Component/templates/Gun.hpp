@@ -2,7 +2,6 @@
 
 #include "../Component.hpp"
 #include <memory>
-#include <sys/wait.h>
 
 namespace component {
     class Gun : public Component {

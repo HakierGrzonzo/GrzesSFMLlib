@@ -5,7 +5,6 @@
 #include <libavutil/channel_layout.h>
 #include <libswresample/swresample.h>
 extern "C" {
-#include <asm-generic/errno-base.h>
 #include <libavcodec/avcodec.h>
 #include <libavcodec/codec.h>
 #include <libavcodec/packet.h>

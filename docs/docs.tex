@@ -1,0 +1,188 @@
+% !TEX program = xelatex
+%Wzór dokumentu
+%tu zmień marginesy i rozmiar czcionki
+\documentclass[a4paper,11pt]{article}
+\usepackage{inputenc}[utf8]
+\usepackage[margin=2.8cm]{geometry}
+\usepackage[polish]{babel}
+
+%Lepiej tego nie zmieniaj, jak co to dodawaj pakiety
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage{mdframed}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{pdfpages}
+\usepackage{tikz}
+	\usetikzlibrary{arrows}
+	\usetikzlibrary{patterns}
+	\usetikzlibrary{decorations.pathmorphing}
+\usepackage{pgf}
+\usepackage[section]{placeins}
+
+
+
+%inny wygląd
+%\usepackage{tgbonum}
+
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\urlstyle{same}
+%Zmienne, zmień je!
+\graphicspath{ {./ilustracje/} }
+\title{Dokumentacja projektu GrzesSFMLlib}
+\author{Grzegorz Koperwas}
+\date{\today}
+
+%lokalizacja polska (odkomentuj jak piszesz po polsku)
+
+\usepackage{polski}
+\usepackage[polish]{babel} 
+\usepackage{indentfirst}
+\usepackage{icomma} 
+
+\brokenpenalty=1000
+\clubpenalty=1000
+\widowpenalty=1000    
+
+%nie odkometowuj wszystkiego, użyj mózgu
+%\renewcommand\thechapter{\arabic{chapter}.}
+\renewcommand\thesection{\arabic{section}.}
+\renewcommand\thesubsection{\arabic{section}.\arabic{subsection}.}
+\renewcommand\thesubsubsection{\arabic{subsubsection}.}
+
+%Makra
+
+\newcommand{\obrazek}[2]{
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=#1]{#2}
+\end{figure}
+}     
+
+\newcommand{\stopnie}{\ensuremath{^{\circ}}}
+
+\newcommand{\twierdzonko}[1]{
+    \begin{center}
+    \begin{mdframed}
+    #1
+    \end{mdframed}          
+    \end{center}
+} 
+
+\newcommand{\dwanajeden}[2]{
+\ensuremath \left( \begin{array}{c}
+    #1\\
+    #2
+\end{array} \right)
+}  
+
+%Stopka i head (sekcja której nie powinno się zmieniać)
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+
+%Zmieniaj od tego miejsca
+\rfoot{\thepage}
+\lfoot{}
+\lhead{}
+\rhead{}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+
+
+
+\begin{document}
+\begin{flushright}
+    \LARGE{\thetitle}
+
+    \Large{\theauthor}
+
+    \thedate
+\end{flushright}
+
+\section{Instrukcje dotyczące kompilacji}
+
+Projekt został wykonany w środowisku \texttt{meson}, zalecane jest użycie systemu linux i kompilacji krzyżowej w celu kompilacji projektu.
+
+Projekt był testowany jedynie w architekturze x86\_64, i686\footnote{32 bitowe pentium III+} nie jest wspierane.
+
+
+\subsection*{Potrzebne biblioteki i inne zalecane programy:}
+
+\begin{itemize}
+    \item Wymagane programy:
+    \begin{itemize}
+        \item gcc - kompilator
+        \item meson - środowisko budujące
+    \end{itemize}
+    \item Zalecane programy:
+    \begin{itemize}
+        \item GNU make - pliki \texttt{makefile} w projekcie same nie budują jego, lecz jedynie wyzwalają komendy kompilacji i uruchomienia.
+        \item fish - powłoka w której został napisany skrypt \texttt{refactor.sh}.
+        \item ffmpeg - konwersja plików \texttt{.wav} do formatów skompresowanych.
+        \item krita - edycja grafik (pliki \texttt{.kra} zawierają edytowalne wersje)
+        \item sfxr - generowanie efektów dźwiękowych (pliki \texttt{.sfxr} zawierają edytowalne wersje)
+        \item famitracker - generowanie innych efektów dźwiękowych (pliki \texttt{.ftm} zawierają edytowalne wersje)
+        \item xelatex - dokumentacja.
+    \end{itemize}
+    \item Wymagane biblioteki:
+    \begin{itemize}
+        \item sfml
+        \item box2d
+        \item OpenAL
+        \item \href{https://github.com/aaronmjacobs/Boxer}{boxer} - należy zainstalować bibliotekę samemu do \texttt{/lib64/libBoxer.a}
+        \item libavcodec, libavutil, libavformat, libswresample - powinny być zainstalowane wraz z \texttt{ffmpeg}'iem
+        \item GTK+ 3
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Kompilacja krzyżowa}
+
+Kompilację krzyżową można zrealizować za pomocą narzędzi \texttt{mingw-w64-*}, jednak trzeba wtedy samodzielnie skompilować wszystkie biblioteki za pomocą tych narzędzi. \emph{Arch Linux} w repozytoriach społeczności posiada wersje wielu z tych programów i bibliotek pod mingw właśnie.
+
+\section{Instrukcja obsługi}
+
+\subsection*{Wymagania minimalne}
+
+\begin{itemize}
+    \item Karta graficzna z obsługą OpenGL 3.0 lub lepiej
+    \item 64 bitowy system Gnu/Linux lub 64 bitowy system Windows
+\end{itemize}
+
+\subsection*{Sterowanie}
+
+\begin{itemize}
+    \item Poruszanie klawiszami \texttt{WASD}
+    \item Strzelanie spacją
+    \item Spowolnienie czasu - lewy ctrl
+    \item Celowanie myszą
+\end{itemize}
+
+\section{Dokumentacja techniczna}
+
+\subsection{Ogólny opis architektury projektu}
+
+\begin{figure}[h]
+    \resizebox{\textwidth}{!}{%
+    \input{arch.tex}%
+    }
+    \centering
+    \caption{Kto posiada kogo w aplikacji}
+\end{figure}
+
+\end{document}

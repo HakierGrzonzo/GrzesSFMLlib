@@ -383,3 +383,4 @@ main
 *.pdf
 *.aux
 *.out
+docs/arch.tex
