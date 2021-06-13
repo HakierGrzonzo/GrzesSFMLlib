@@ -27,7 +27,7 @@
 
 
 void gameloop() {
-    // initialize `randomness`
+    // initialize `randomnes`
     utils::Random::init(640);
 
     // set up settings for OpenGL

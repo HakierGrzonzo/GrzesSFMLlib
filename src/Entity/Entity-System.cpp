@@ -203,6 +203,9 @@ namespace entity {
 
     void EntitySystem::doUpdateTick() {
         // do chunkCache update
+        if (chunkCache) {
+            delete chunkCache;
+        }
         chunkCache = new std::unordered_map<sf::Vector2i, std::vector<std::weak_ptr<Entity>>, coordHash>();
         for (const auto i : allLayers) {
             auto vectorRef = getVectorByLayer(i);
