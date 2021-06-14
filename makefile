@@ -13,7 +13,7 @@ buildWindows:
 wine: buildWindows
 	x86_64-w64-mingw32-wine ./mingw/GrzesSFMLlib.exe
 
-.PHONY: sfx setup
+.PHONY: sfx setup graphs
 
 sfx: sfxr-raw/*.wav
 	for file in $$(ls sfxr-raw/*.wav); do \
@@ -24,3 +24,10 @@ sfx: sfxr-raw/*.wav
 setup:
 	meson setup Build && \
 	x86_64-w64-mingw32-meson mingw --buildtype release -Dwindows=true
+
+graphs: 
+	for file in $$(ls docs/*.dot); do \
+		echo $${file}; \
+		dot2tex --autosize --pgf210 --figonly --texmode raw $${file} > $$(echo $${file} | cut -d'.' -f1).tex; \
+	done
+

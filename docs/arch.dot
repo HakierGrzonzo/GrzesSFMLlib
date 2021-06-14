@@ -19,6 +19,7 @@ digraph G {
 		ResourceManager;
 		CameraSmoother;
 		Random;
+		Position;
 		label="namespace utils";
 	}
 	EntitySystem -> AudioScene;
@@ -26,5 +27,6 @@ digraph G {
 	EntitySystem -> Entity;
 	EntitySystem -> CameraSmoother;
 	Entity -> Component;
+	Entity -> Position;
 	AudioScene -> Player;
 }
