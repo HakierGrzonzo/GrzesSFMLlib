@@ -7,7 +7,13 @@ run: build
 valgrind: build
 	valgrind ./Build/GrzesSFMLlib
 
-.PHONY: sfx
+buildWindows:
+	meson compile -C mingw
+
+wine: buildWindows
+	x86_64-w64-mingw32-wine ./mingw/GrzesSFMLlib.exe
+
+.PHONY: sfx setup
 
 sfx: sfxr-raw/*.wav
 	for file in $$(ls sfxr-raw/*.wav); do \
@@ -15,3 +21,6 @@ sfx: sfxr-raw/*.wav
 		ffmpeg -i $${file} -y resources/sfx/$${newFile}.aac; \
 		done
  
+setup:
+	meson setup Build && \
+	x86_64-w64-mingw32-meson mingw --buildtype release -Dwindows=true

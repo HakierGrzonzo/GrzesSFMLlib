@@ -1,23 +1,33 @@
 project('GrzesSFMLlib', 'cpp',
   version : '0.1',
   license: 'MIT',
-  default_options : ['warning_level=3', 'cpp_std=c++20'])
+  default_options : ['warning_level=2', 'cpp_std=c++20'])
 
 
-    add_global_arguments('-g', language : 'cpp')
-    add_global_arguments('-O0', language : 'cpp')
-    warning('Turning off optimization in debug mode')
+#add_global_arguments('-g', language : 'cpp')
+#add_global_arguments('-O0', language : 'cpp')
+#warning('Turning off optimization in debug mode')
+
 
 sfml = dependency('sfml-all')
 box2d = dependency('box2d')
-gtk = dependency('gtk+-3.0')
 openal = dependency('openal')
 libavcodec = dependency('libavcodec')
 libavutil = dependency('libavutil')
 libavformat = dependency('libavformat')
 libswresample = dependency('libswresample')
 boxerInc = include_directories('../Boxer/include')
-boxer = declare_dependency(link_args: '/lib64/libBoxer.a', include_directories: boxerInc)
+
+windows = get_option('windows')
+if windows
+  boxer = declare_dependency()
+  gtk = declare_dependency()
+else
+  boxer = declare_dependency(link_args: '/lib64/libBoxer.a', include_directories: boxerInc)
+  gtk = dependency('gtk+-3.0')
+  add_global_arguments('-DBOXER=1', language: 'cpp')
+endif
+
 
 executable('GrzesSFMLlib',
           './src/Entity/templates/Background.cpp',

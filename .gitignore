@@ -384,3 +384,7 @@ main
 *.aux
 *.out
 docs/arch.tex
+
+mingw/
+release/*
+*.zip
