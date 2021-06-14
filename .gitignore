@@ -388,3 +388,5 @@ docs/arch.tex
 mingw/
 release/*
 *.zip
+docs/docs.toc
+docs/renderable.tex

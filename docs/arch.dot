@@ -1,5 +1,8 @@
 digraph G {
 	//splines="FALSE";
+	Tekstury;
+	Fonty;
+	"Kod źródłowy shaderów";
 	subgraph cluster_Entity {
 		EntitySystem;
 		Input;
@@ -28,5 +31,12 @@ digraph G {
 	EntitySystem -> CameraSmoother;
 	Entity -> Component;
 	Entity -> Position;
-	AudioScene -> Player;
+	Entity -> Player;
+	ResourceManager -> Player;
+	ResourceManager -> Tekstury;
+	ResourceManager -> Fonty;
+	ResourceManager -> "Kod źródłowy shaderów";
+	Component -> Tekstury [style=dashed];
+	Component -> Fonty [style=dashed];
+	AudioScene -> Player  [style=dashed];
 }

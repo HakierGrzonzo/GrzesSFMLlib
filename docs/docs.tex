@@ -107,13 +107,26 @@
 
 
 \begin{document}
+
+\thispagestyle{empty}
+\begin{minipage}{\textwidth}
+\vspace{2cm}
 \begin{flushright}
-    \LARGE{\thetitle}
+    \LARGE{\textbf{\thetitle}}
+
+    \vspace{1cm}
 
     \Large{\theauthor}
 
-    \thedate
+    \makeatletter
+    \@date
+    \makeatother
 \end{flushright}
+\end{minipage}
+
+\vspace{4cm}
+
+\tableofcontents
 
 \section{Instrukcje dotyczące kompilacji}
 
@@ -145,15 +158,44 @@ Projekt był testowany jedynie w architekturze x86\_64, i686\footnote{32 bitowe 
         \item sfml
         \item box2d
         \item OpenAL
-        \item \href{https://github.com/aaronmjacobs/Boxer}{boxer} - należy zainstalować bibliotekę samemu do \texttt{/lib64/libBoxer.a}
         \item libavcodec, libavutil, libavformat, libswresample - powinny być zainstalowane wraz z \texttt{ffmpeg}'iem
-        \item GTK+ 3
+        \item Dla systemu linux:
+        \begin{itemize}
+            \item GTK+ 3
+            \item \href{https://github.com/aaronmjacobs/Boxer}{boxer} - należy zainstalować bibliotekę samemu do \texttt{/lib64/libBoxer.a}
+        \end{itemize}
+        Dla systemu windows obsługa popupów z błędami została wyłączona.
     \end{itemize}
 \end{itemize}
 
 \subsection*{Kompilacja krzyżowa}
 
-Kompilację krzyżową można zrealizować za pomocą narzędzi \texttt{mingw-w64-*}, jednak trzeba wtedy samodzielnie skompilować wszystkie biblioteki za pomocą tych narzędzi. \emph{Arch Linux} w repozytoriach społeczności posiada wersje wielu z tych programów i bibliotek pod mingw właśnie.
+Kompilację krzyżową można zrealizować za pomocą narzędzi \texttt{mingw-w64-*}, jednak trzeba wtedy samodzielnie skompilować wszystkie biblioteki za pomocą tych narzędzi. \emph{Arch Linux} w repozytoriach społeczności posiada wersje wielu z tych programów i bibliotek pod mingw właśnie. Projekt posiada skrypt \texttt{makewinBuild.sh} który kopiuje wybudowany plik wykonywalny, assety oraz pliki \texttt{dll} do folderu \texttt{release/} i go zipuje. Taka konfiguracja może łatwo być testowana za pomocą środowiska \texttt{WINE}\footnote{WINE - ,,Wine Is Not An Emulator'' - środowisko zastępujące biblioteki windowsowe unixowymi, pozwalające programom windowsowym działać na systemach unixopodobnych}.
+
+\subsection*{Obsługa projektu}
+
+Najpierw należy wykonać polecenie
+\begin{lstlisting}[frame=single,basicstyle=\ttfamily]
+$ make setup
+\end{lstlisting}
+by meson zainicjalizował pliki projektu. Meson sprawdzi wtedy obecność wszystkich bibliotek do kompilacji normalnej i krzyżowej.
+
+Projekt kompilujemy poleceniem:
+\begin{lstlisting}[frame=single,basicstyle=\ttfamily]
+$ make build
+\end{lstlisting}
+lub dla systemu windows:
+\begin{lstlisting}[frame=single,basicstyle=\ttfamily]
+$ make buildWindows
+\end{lstlisting}
+
+Pliki wykonywalne znajdą się w folderach \texttt{Build/} oraz \texttt{mingw/}. By uruchomić build linuxowy możemy wydać polecenie:
+\begin{lstlisting}[frame=single,basicstyle=\ttfamily]
+$ make run
+\end{lstlisting}
+
+Jeżeli wystąpiły jakieś zmiany to meson je zbuduje.
+
 
 \section{Instrukcja obsługi}
 
@@ -175,14 +217,60 @@ Kompilację krzyżową można zrealizować za pomocą narzędzi \texttt{mingw-w6
 
 \section{Dokumentacja techniczna}
 
+\subsection{Założenia oraz filozofia aplikacji}
+
+Celem projektu było początkowo stworzenie gry, ale w jego trakcie okazało się że zabawa w implementację wielu różnych funkcjonalności jest o wiele ciekawsze niż pisanie gry, która te funkcjonalności by wykorzystywała. Mimo podczas pisania projektu kierowałem się następującymi zasadami:
+
+\begin{enumerate}
+    \item \textbf{Sprytne wskaźniki zamiast ,,gołych'' wskaźników} - smart pointer'y okazały się bardzo pomocną rzeczą, zastosowanie klasy \texttt{std::shared\_ptr} pozwoliło na wyeliminowanie problemów z żywotnością obiektów. Obiekty klasy \texttt{entity::EntitySystem} posiadją wskaźniki dzielone, a obiekty klasy \texttt{entity::Entity} odnoszą się do siebie za pomocą \texttt{std::weak\_ptr}, przez co mogą sprawdzać czy nadal istnieją. Obiekt klasy \texttt{audio::AudioScene} może bez problemu usuwać dźwięki obiektów które już nie istnieją.
+    \item \textbf{Wykorzystanie wielu narzędzi jakie daje nam \texttt{c++}} - Zostały użyte makra, czy to do wpisywania stałych, czy to do małych operacji, jednak zdarzyła się sytuacja gdzie makro utrudniło pracę nad projektem\footnote{Makro \texttt{\#define sqr(x) x*x} nie było dobrym pomysłem}.
+    \item \textbf{System Entity Component} - zaimplementowano system w formie jaka została zamierzona, jednak jego forma nie jest optymalna. Wcześniejsze ustalenie i zaplanowanie systemu w formie pozwalającej na wielowątkowość było by lepsze.
+    \item \textbf{Zapoznanie się z bibliotekami projektu FFmpeg} - Już przed rozpoczęciem projektu miałem duże doświadczenie z używaniem narzędzi \texttt{ffprobe} oraz \texttt{ffmpeg} w skryptach\footnote{W firmię, w której pracuje, rozwijam rozwiązania związane z transmisją wideo w sieci}, ale dobre zaimplementowanie filtrowania audio okazało się być trudniejsze niż myślałem, dla tego na chwilę obecną filtrowanie przejęła na siebie biblioteka \texttt{OpenAL}.
+\end{enumerate}
+
 \subsection{Ogólny opis architektury projektu}
 
-\begin{figure}[h]
+Środkiem projektu jest klasa \texttt{entity::EntitySystem}, która jest rdzeniem projektu. Obiekty tej klasy mają za zadanie rysowanie odpowiednich komponentów na ekranie, zarządzanie samymi obiektami klasy \texttt{entity::Entity}, jak i kontrola nad fizyką oraz audio. Na rysunku \ref{rys:owners} przedstawiono które obiekty jakiej klasy posiadają jakie inne.
+
+Dużą częścią projektu są obiekty klas pochodnych klasy \texttt{component::Component}, zawierają one właśnie metody które są uruchamiane w odpowiedniej kolejności co klatkę. Ich struktura jest stworzona tak że jeśli dodamy do danego obiektu \texttt{entity::Entity} dany komponent, to ten obiekt zyska jakieś możliwości, na przykład komponent \texttt{component::PhysicsBody} symuluje fizykę oraz kolizje.
+\begin{figure}
     \resizebox{\textwidth}{!}{%
     \input{arch.tex}%
     }
     \centering
-    \caption{Kto posiada kogo w aplikacji}
+    \caption{Kto posiada kogo w aplikacji}\label{rys:owners}
+\end{figure}
+
+\subsection{Klasa \texttt{component::Component} i co się dzieje podczas klatki}
+
+Polimorficzna klasa \texttt{component::Component} posiada metody wirtualne które są uruchamiane w odpowiedniej kolejności przez obiekty klasy \texttt{entity::EntitySystem}. Klasy pochodne przedstawiono na rysunku \ref{rys:component}.
+
+Podczas trwania jednej klatki wywoływane są następujące metody:
+
+\begin{itemize}
+    \item \texttt{Awake()} - uruchamiane raz podczas dodawania entity z danym komponentem do obiekty klasy \texttt{entity::EntitySystem}
+\end{itemize}
+
+Reszta metod jest ściśle związana z tym co się dzieje podczas klatki:
+
+\begin{enumerate}
+    \item Na początku obiekty klasy \texttt{entity::Entity} są przydzielane do tablicy mieszającej\footnote{std::unordered\_map} w celu możliwości szybkiego wyszukiwania ich po lokalizacji.
+    \item Jeżeli okno aplikacji jest aktywne, obiekt klasy \texttt{entity::InputHandler} wywołuje subskrybentów danych klawiszy.
+    \item Następnie wywoływane są wszystkie metody \texttt{Update()} w komponentach.
+    \item Potem wywoływane są metody \texttt{FixedUpdate()}, gdzie jako argument jest liczba sekund od ostatniej klatki.
+    \item Wykonywana jest symulacja fizyki, tu są wywoływane metody \texttt{OnCollisionEnter()} oraz \texttt{OnCollisionLeave()} w komponentach klasy \texttt{component::PhysicsBody}, jako argument jest podawany wskaźnik do komponentu z którym zaszła kolizja.
+    \item Po symulacji wywoływana jest metoda \texttt{LateFixedUpdate()}, gdzie powinno się usuwać obiekty.
+    \item Wywoływana zostanie metoda \texttt{Update()} na obiekcie klasy \texttt{audio::AudioScene}, która porusza źródła dźwięku odpowiednio oraz usuwa te które albo skończyły już odtwarzać dźwięki lub ich właściciele nie istnieją.
+    \item Na sam koniec klatki wywoływane zostają metody \texttt{Render} komponentów dziedziczących po klasie \texttt{component::Renderable}, zwracają one to, co ma zostać narysowane na ekranie.
+\end{enumerate}
+
+
+\begin{figure}
+    \resizebox{\textwidth}{!}{%
+    \input{renderable.tex}%
+    }
+    \centering
+    \caption{Drzewo dziedziczenia komponentów}\label{rys:component}
 \end{figure}
 
 \end{document}

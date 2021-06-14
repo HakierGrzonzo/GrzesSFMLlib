@@ -317,11 +317,13 @@ namespace entity {
         auto res = std::vector<std::weak_ptr<Entity>>();
         auto topChunk = getChunkCoord(sf::Vector2f(refrence->position.xy.x + radius, refrence->position.xy.y + radius));
         auto bottomChunk = getChunkCoord(sf::Vector2f(refrence->position.xy.x - radius, refrence->position.xy.y - radius));
+        // loop every cell in a square of side `radius`
         for (float x = bottomChunk.x; x <= topChunk.x; x++) {
             for (float y = bottomChunk.y; y <= topChunk.y; y++) {
                 auto currentChunk = sf::Vector2i(x, y);
                 try {
                     auto entities = &chunkCache->at(currentChunk);
+                    // check if entity is in `radius`
                     for (unsigned long long i = 0; i < entities->size(); i++) {
                         auto current = entities->operator[](i);
                         if (!current.expired()) {

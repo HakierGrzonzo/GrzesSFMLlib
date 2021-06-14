@@ -1,0 +1,67 @@
+digraph G {
+	subgraph cluster_Component {
+		Component;
+		Renderable;
+			Component -> Renderable;
+		SpriteRenderer;
+			Renderable -> SpriteRenderer;
+		ShadedSpriteRenderer;
+			SpriteRenderer -> ShadedSpriteRenderer;
+		HPdisplayer;
+			Renderable -> HPdisplayer;
+		PhysicsBody;
+			Component -> PhysicsBody;
+		Bullet;
+			PhysicsBody -> Bullet;
+		BulletSound;
+			Component -> BulletSound;
+		Creature;
+			Component -> Creature;
+		Debug;
+			Component -> Debug;
+		Explosion;
+			Component -> Explosion;
+		Gun;
+			Component -> Gun;
+		PlayerControler;
+			Component -> PlayerControler;
+		Spawner;
+			Component -> Spawner;
+		StaticPhysics;
+			PhysicsBody -> StaticPhysics;
+		label="\texttt{namespace component}";
+
+		subgraph cluster_Sprites {
+			Player;
+			BulletSprite [label=Bullet];
+			Background;
+			ExplosionSprite [label=Explosion];
+			Test;
+			Wall;
+			Korwin;
+			label="\texttt{namespace sprite}";
+		}
+		SpriteRenderer -> Wall;
+		SpriteRenderer -> Player;
+		SpriteRenderer -> Test;
+
+		ShadedSpriteRenderer -> BulletSprite;
+		ShadedSpriteRenderer -> Background;
+		ShadedSpriteRenderer -> ExplosionSprite;
+		ShadedSpriteRenderer -> Korwin;
+
+		subgraph cluster_Guns {
+			Pistol;
+			label="\texttt{namespace guns}"
+		}
+		Gun -> Pistol;
+
+		subgraph cluster_Spawners {
+			Generic [label="template Generic"];
+			label="\texttt{namespace spawners}"
+		}
+		Spawner -> Generic;
+
+	}
+
+}
