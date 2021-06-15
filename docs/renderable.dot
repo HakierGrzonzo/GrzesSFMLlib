@@ -1,10 +1,12 @@
 digraph G {
 	subgraph cluster_Component {
 		Component;
-		Renderable;
-			Component -> Renderable;
 		PlayerControler;
 			Component -> PlayerControler;
+		EnemyControler;
+			Component -> EnemyControler;
+		Renderable;
+			Component -> Renderable;
 		SpriteRenderer;
 			Renderable -> SpriteRenderer;
 		ShadedSpriteRenderer;
