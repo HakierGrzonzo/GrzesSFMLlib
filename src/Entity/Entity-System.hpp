@@ -76,9 +76,15 @@ namespace entity {
             addEntity(Entity* entity, layers layer = layers::normal);
 
             // Get entities in radius
-            // Does not return refrence entity, can ignore entities with `bullet` tag
+            // Does not return refrence entity
+            // if exclude is set it will ignore entities with `tag`
             std::vector<std::weak_ptr<Entity>> 
-            getEntitiesInRadius(Entity* refrence, float radius, bool ignoreBullets = true);
+            getEntitiesInRadius(
+                    Entity* refrence, 
+                    float radius, 
+                    entityTags tag = bullet,
+                    bool exclude = true
+            );
             
             // input handler
             InputDirector inputHandler;

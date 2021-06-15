@@ -1,8 +1,9 @@
-#include "../../Component/templates/Korwin.hpp"
-#include "../../funcs.hpp"
 #include "Korwin.hpp"
+#include "../../funcs.hpp"
+#include "../../Component/templates/Korwin.hpp"
 #include "../../Component/templates/Physics.hpp"
-#include "../../Component/templates/Creature.hpp"
+#include "../../Component/templates/Enemy.hpp"
+#include "../../Component/templates/EnemyController.hpp"
 
 namespace entity {
     namespace tests {      
@@ -12,7 +13,8 @@ namespace entity {
         void korwintest::Initialize() {
             add_component(component::sprites::korwin);
             add_component(component::PhysicsBody);
-            add_component(component::Creature);
+            add_component(component::Enemy);
+            add_component(component::EnemyController);
         }
         void korwintest::LateInitialize() {
             component::PhysicsBody* physics = GetComponent<component::PhysicsBody>();

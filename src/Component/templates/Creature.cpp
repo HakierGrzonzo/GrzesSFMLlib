@@ -5,8 +5,12 @@ namespace component {
         hp = 100;
         maxHP = hp;
     }
+
+    void Creature::onDeathHook() {}
+
     void Creature::FixedUpdate(double timeDelta) {
         if (hp == 0) {
+            onDeathHook();
             parent->scene->deleteEntity(parent);
         }
         else if (hp > maxHP) {

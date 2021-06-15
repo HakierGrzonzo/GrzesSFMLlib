@@ -6,6 +6,7 @@ namespace entity {
         enemy,
         player,
         bullet,
-        visual
+        visual,
+        target
     };
 }

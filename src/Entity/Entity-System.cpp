@@ -61,6 +61,7 @@ namespace entity {
         inputHandler = InputDirector();
         lastTime = std::chrono::steady_clock::now();
         isSmoothed = false;
+        chunkCache = nullptr;
     }
 
     void EntitySystem::doTick() {
@@ -312,7 +313,11 @@ namespace entity {
     }
 
     std::vector<std::weak_ptr<Entity>>
-    EntitySystem::getEntitiesInRadius(Entity* refrence, float radius, bool ignoreBullets) {
+    EntitySystem::getEntitiesInRadius(
+            Entity* refrence,
+            float radius,
+            entityTags tag,
+            bool exclude) {
         assertNotNull(chunkCache);
         auto res = std::vector<std::weak_ptr<Entity>>();
         auto topChunk = getChunkCoord(sf::Vector2f(refrence->position.xy.x + radius, refrence->position.xy.y + radius));
@@ -328,10 +333,17 @@ namespace entity {
                         auto current = entities->operator[](i);
                         if (!current.expired()) {
                             auto currentRef = current.lock();
-                            if (refrence->position.distanceTo(currentRef->position) < radius
-                                    && currentRef.get() != refrence) {
-                                if (currentRef->tag != bullet || !ignoreBullets)
-                                    res.push_back(current);
+                            if (
+                                refrence->position.distanceTo(currentRef->position) < radius
+                                && currentRef.get() != refrence) {
+                                    if (exclude) {
+                                        if (currentRef->tag != tag)
+                                            res.push_back(current);
+                                    }
+                                    else {
+                                        if (currentRef->tag == tag)
+                                            res.push_back(current);
+                                    }
                             }
                         }
                     }

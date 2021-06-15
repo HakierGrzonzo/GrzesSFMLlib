@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-
 #define ComponentDefined
 
 namespace entity {
