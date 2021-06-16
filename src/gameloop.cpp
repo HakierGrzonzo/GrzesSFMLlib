@@ -24,6 +24,7 @@
 #include "Entity/templates/HPdisplay.hpp"
 #include "Entity/templates/Wall.hpp"
 #include "Utils/Random.hpp"
+#include <fstream>
 
 
 void gameloop() {
@@ -52,6 +53,29 @@ void gameloop() {
         "You need OpenGL 3.0 or better to play this game"
     );
     
+    // if on linux limit fps on battery
+#ifdef __linux
+    // open file with the status of the first battery
+    // we pretend that every laptop has just one
+    std::ifstream batteryFile ("/sys/class/power_supply/BAT0/status");
+    if (batteryFile.is_open()) {
+        // If we succeded in opening the file, that means that there is battery
+        // in the system (although we do not check if it is there right now)
+        std::string status;
+        std::getline(batteryFile, status);
+        // That file will contain a string with the battery status, we only
+        // care if it is Discharging
+        if (status == "Discharging") {
+            std::cout << "You are on battery so we will limit fps to 30!"
+                << std::endl;
+            // try to send a desktop notification using libnotify
+            std::system("notify-send \"GrzesSFMLib\" \"Limiting fps to 30 on battery\"");
+            window.setFramerateLimit(30);
+            window.setVerticalSyncEnabled(false);
+        }
+    }
+#endif
+
     // create scene
     entity::EntitySystem testScene = entity::EntitySystem(&window);
     // setup background

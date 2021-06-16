@@ -6,5 +6,7 @@ namespace component {
         public:
             EnemyController(entity::Entity* parent_);
             void Update();
+        private:
+            std::weak_ptr<entity::Entity> lastVisitedEntity;
     };
 }
