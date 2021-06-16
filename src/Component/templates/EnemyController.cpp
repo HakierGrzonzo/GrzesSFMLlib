@@ -3,7 +3,7 @@
 #include "Explosion.hpp"
 #include "Physics.hpp"
 #include "../../funcs.hpp"
-#include "../../Entity/templates/BigExplosion.hpp"
+#include "Enemy.hpp"
 #include <memory>
 
 float getScore(int priority, float distance) {
@@ -38,13 +38,9 @@ namespace component {
                     float distance = parent->position.distanceTo(playerRef->position); 
                     distance < 3000) {
                 if (distance < 300) {
-                    parent->scene->addEntity(
-                            new entity::BigExplosion(
-                                parent->position,
-                                parent->scene
-                            ), entity::top
-                    );
-                    parent->scene->deleteEntity(parent);
+                    auto creature = parent->GetComponent<Enemy>();
+                    assertNotNull(creature);
+                    creature->setHP(0);
                     return;
                 }
                 playerInRange = true;

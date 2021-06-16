@@ -15,6 +15,7 @@
 #include "Component/Component.hpp"
 #include "Entity/Entity-System.hpp"
 #include "Entity/templates/Korwin.hpp"
+#include "Utils/Position.hpp"
 #include "Utils/ResourceManager.hpp"
 #include "constants.hpp"
 #include "funcs.hpp"
@@ -23,6 +24,7 @@
 #include "Entity/templates/SpawnerTest.hpp"
 #include "Entity/templates/HPdisplay.hpp"
 #include "Entity/templates/Wall.hpp"
+#include "Entity/templates/HPeffect.hpp"
 #include "Utils/Random.hpp"
 #include <fstream>
 
@@ -121,14 +123,16 @@ void gameloop() {
         &testScene
     ));
 
+    // add hp effect
+    testScene.addEntity(new entity::HPeffect(
+        utils::Position(),
+        &testScene
+        ), entity::top
+    );
+
     // get refrence to player and set it as a focused entity
     auto player = testScene.GetEntityByTag(entity::entityTags::player);
     testScene.focusedEntity = player;
-    auto cameraPosSmoother = utils::CameraSmoother(
-            10,
-            player.lock()->position.xy
-        );
-
     /*
      * main loop
      */
