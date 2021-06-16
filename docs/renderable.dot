@@ -23,6 +23,8 @@ digraph G {
 			Component -> Creature;
 		Enemy;
 			Creature -> Enemy;
+        Player;
+            Creature -> Player;
 		EnemyTarget;
 			Component -> EnemyTarget;
 		Debug;
@@ -40,7 +42,7 @@ digraph G {
 		label="\texttt{namespace component}";
 
 		subgraph cluster_Sprites {
-			Player;
+			PlayerSprite [label=Player];
 			BulletSprite [label=Bullet];
 			Background;
 			ExplosionSprite [label=Explosion];
@@ -50,7 +52,7 @@ digraph G {
 			label="\texttt{namespace sprite}";
 		}
 		SpriteRenderer -> Wall;
-		SpriteRenderer -> Player;
+		SpriteRenderer -> PlayerSprite;
 		SpriteRenderer -> Test;
 
 		ShadedSpriteRenderer -> BulletSprite;

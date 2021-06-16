@@ -14,6 +14,8 @@ namespace component {
             float offset = 1.5 * utils::Random::getI(2137);
             renderCounter = 0.2 + offset;
             length = 1.5 + offset;
+            range = -1;
+            animationSpeed = 1;
         }
         
         void Explosion::Initialize() {
@@ -26,16 +28,21 @@ namespace component {
         void Explosion::Update() {
             auto explosion = parent->GetComponent<component::Explosion>();
             assertNotNull(explosion);
-            float range = explosion->getRange() / 2;
-            auto size = sprite.getTextureRect();
-            // we assume that texture is square
-            float ratio = (2 * range) / float(size.height);
-            sprite.setScale(sf::Vector2f(ratio, ratio));
-            sprite.setOrigin(sf::Vector2f(range / 2, range / 2));
+            if (range != explosion->getRange()) {
+                range = explosion->getRange();
+                auto size = getSpriteSize();
+                print(range / size.x);
+                sprite.setOrigin(size / float(2));
+                sprite.setScale(sf::Vector2f(
+                    range / size.x,
+                    range / size.y
+                ));
+                animationSpeed  = 900/(range);
+            }
         }
 
         void Explosion::FixedUpdate(double timeStep) {
-            renderCounter += timeStep * 3;
+            renderCounter += timeStep * animationSpeed;
             shader->setUniform("renderCount", renderCounter);
         }
 

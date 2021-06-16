@@ -15,7 +15,7 @@ namespace component {
             void setHP(unsigned int hp_);
             void setMaxHP(unsigned int hp_);
             // call this to modify hp
-            unsigned int changeHP(int changeBy);
+            virtual unsigned int changeHP(int changeBy);
             virtual ~Creature();
         protected:
             // called before deletion

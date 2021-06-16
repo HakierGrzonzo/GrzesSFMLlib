@@ -13,7 +13,7 @@ buildWindows:
 wine: buildWindows
 	x86_64-w64-mingw32-wine ./mingw/GrzesSFMLlib.exe
 
-.PHONY: sfx setup graphs
+.PHONY: sfx setup graphs docs
 
 sfx: sfxr-raw/*.wav
 	for file in $$(ls sfxr-raw/*.wav); do \
@@ -31,3 +31,5 @@ graphs:
 		dot2tex --autosize --pgf210 --figonly --texmode raw $${file} > $$(echo $${file} | cut -d'.' -f1).tex; \
 	done
 
+docs: graphs
+	cd docs; xelatex docs.tex

@@ -1,7 +1,7 @@
 #include "Player.hpp"
 #include "../../funcs.hpp"
 #include "../../Component/templates/Physics.hpp"
-#include "../../Component/templates/Creature.hpp"
+#include "../../Component/templates/Player.hpp"
 #include "../../Component/templates/playerControler.hpp"
 #include "../../Component/templates/Debug.hpp"
 #include "../../Component/templates/sprites/Player.hpp"
@@ -16,7 +16,7 @@ namespace entity {
     void playerEntity::Initialize() {
         add_component(component::sprites::player);
         add_component(component::PhysicsBody);
-        add_component(component::Creature);
+        add_component(component::Player);
         add_component(component::PlayerControler);
         add_component(component::guns::Pistol);
     }

@@ -13,6 +13,8 @@ namespace component {
             private:
                 float renderCounter;
                 float length;
+                float range;
+                float animationSpeed;
         };
     }
 }
