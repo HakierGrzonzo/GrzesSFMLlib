@@ -31,6 +31,8 @@ digraph G {
 			Component -> Gun;
 		Explosion;
 			Component -> Explosion;
+        BigExplosion;
+            Explosion -> BigExplosion;
 		Spawner;
 			Component -> Spawner;
 		StaticBody;

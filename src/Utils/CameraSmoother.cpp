@@ -34,7 +34,7 @@ namespace utils {
         if (newSpeed == 0) newSpeed += 0.00000001;
         currentVelocity /= float(newSpeed);
         sf::Vector2f newOffset = currentVelocity * float(newSpeed);
-        newOffset = minimize(newOffset, ensureSignVec(newOffset, bounds));
+        newOffset = minimize(newOffset, ensureSignVec(newOffset, bounds)) * float(.5);
         return newOffset + center;
     }
 }

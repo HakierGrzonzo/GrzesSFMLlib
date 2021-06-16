@@ -1,7 +1,9 @@
 #include "EnemyController.hpp"
 #include "EnemyTarget.hpp"
+#include "Explosion.hpp"
 #include "Physics.hpp"
 #include "../../funcs.hpp"
+#include "../../Entity/templates/BigExplosion.hpp"
 #include <memory>
 
 float getScore(int priority, float distance) {
@@ -32,7 +34,19 @@ namespace component {
         // if player in range go to him
         if (!player.expired()) {
             auto playerRef = player.lock();
-            if (parent->position.distanceTo(playerRef->position) < 2000) {
+            if (
+                    float distance = parent->position.distanceTo(playerRef->position); 
+                    distance < 3000) {
+                if (distance < 300) {
+                    parent->scene->addEntity(
+                            new entity::BigExplosion(
+                                parent->position,
+                                parent->scene
+                            ), entity::top
+                    );
+                    parent->scene->deleteEntity(parent);
+                    return;
+                }
                 playerInRange = true;
                 auto direction = playerRef->position.xy - parent->position.xy;
                 auto movment = sf2box(direction);
