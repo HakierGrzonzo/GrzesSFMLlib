@@ -77,6 +77,8 @@ namespace entity {
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)){
             slowdown = 2;
         }
+        // If fps is lower than 15, make the game run in slower
+        timeSinceLastFrame = fmin(timeSinceLastFrame, 0.066);
         timeSinceLastFrame /= slowdown;
 
         // poll for resize event

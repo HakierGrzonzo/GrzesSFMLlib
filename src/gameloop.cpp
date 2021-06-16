@@ -28,31 +28,7 @@
 
 
 void gameloop() {
-    // initialize `randomnes`
-    utils::Random::init(640);
-
-    // set up settings for OpenGL
-    sf::ContextSettings settings;
-    int aa = sf::RenderTexture::getMaximumAntialiasingLevel();
-    print(aa);
-    settings.antialiasingLevel = aa;
-
-    // Create window
-    sf::RenderWindow window(
-        sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT),
-        "GrzesSFMLib",
-        sf::Style::Default,
-        settings
-    );
-    window.setVerticalSyncEnabled(true);
-    std::cout << "OpenGL version: " << window.getSettings().majorVersion << 
-        '.' << window.getSettings().minorVersion << std::endl;
-
-    assertCond(
-        window.getSettings().majorVersion < 3,
-        "You need OpenGL 3.0 or better to play this game"
-    );
-    
+    bool lowPerf = false;
     // if on linux limit fps on battery
 #ifdef __linux
     // open file with the status of the first battery
@@ -70,11 +46,44 @@ void gameloop() {
                 << std::endl;
             // try to send a desktop notification using libnotify
             std::system("notify-send \"GrzesSFMLib\" \"Limiting fps to 30 on battery\"");
-            window.setFramerateLimit(30);
-            window.setVerticalSyncEnabled(false);
+            lowPerf = true;
         }
     }
 #endif
+    // initialize `randomnes`
+    utils::Random::init(640);
+
+    // set up settings for OpenGL
+    sf::ContextSettings settings;
+    if (lowPerf) {
+        // if lower performence -> set AA to 0
+        settings.antialiasingLevel = 0;
+    } else {
+        int aa = sf::RenderTexture::getMaximumAntialiasingLevel();
+        settings.antialiasingLevel = aa;
+    }
+
+    // Create window
+    sf::RenderWindow window(
+        sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT),
+        "GrzesSFMLib",
+        sf::Style::Default,
+        settings
+    );
+    if (lowPerf) {
+        window.setFramerateLimit(30);
+        window.setVerticalSyncEnabled(false);
+    } else {
+        window.setVerticalSyncEnabled(true);
+    }
+    std::cout << "OpenGL version: " << window.getSettings().majorVersion << 
+        '.' << window.getSettings().minorVersion << std::endl;
+
+    assertCond(
+        window.getSettings().majorVersion < 3,
+        "You need OpenGL 3.0 or better to play this game"
+    );
+    
 
     // create scene
     entity::EntitySystem testScene = entity::EntitySystem(&window);

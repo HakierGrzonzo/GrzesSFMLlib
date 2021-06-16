@@ -10,6 +10,7 @@
 #include "Entity-Tags.hpp"
 #include <vector>
 #include <memory>
+#include "../funcs.hpp"
 
 namespace entity {
     class EntitySystem;
@@ -33,10 +34,23 @@ namespace entity {
              * Returns the first component of type T,
              * if no such component is found it returns nullptr
              */
+            static int cachedIndex = -1;
+            /*
+            if (cachedIndex != -1 && cachedIndex < components.size()) {
+                T* cachedPtr = dynamic_cast<T*>(components[cachedIndex].get());
+                if (cachedPtr != nullptr) {
+                    return cachedPtr;
+                } else {
+                    print("Cache hit miss " << cachedIndex);
+                    cachedIndex = -1;
+                }
+            }
+            */
             T* res = nullptr;
             for (unsigned int i = 0; i < components.size(); i++) {
                 T* someComponent = dynamic_cast<T*>(components[i].get());
                 if (someComponent != nullptr) {
+                    cachedIndex = i;
                     res = someComponent;
                     break;
                 }

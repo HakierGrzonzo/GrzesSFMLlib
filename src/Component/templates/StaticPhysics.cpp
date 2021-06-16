@@ -28,7 +28,6 @@ namespace component {
             assertNotNull(spriteRef);
             auto spriteBounds = spriteRef->getSpriteSize();
             spriteBounds /= float(2);
-            printVec2(sf2box(spriteBounds));
             shape.SetAsBox(explode(sf2box(spriteBounds)));
             fixture.shape = &shape;
             fixture.friction = .3;

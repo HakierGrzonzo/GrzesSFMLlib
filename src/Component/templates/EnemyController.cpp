@@ -29,6 +29,8 @@ namespace component {
             entity::target,
             false
         );
+        auto phys = parent->GetComponent<component::PhysicsBody>();
+        assertNotNull(phys);
         if (targets.size() > 0) {
             std::weak_ptr<entity::Entity> closest;
             float lastScore = -1;
@@ -51,32 +53,29 @@ namespace component {
                     lastScore = score;
                 }
             }
-            auto phys = parent->GetComponent<component::PhysicsBody>();
-            assertNotNull(phys);
             auto direction = closest.lock()->position.xy - parent->position.xy;
             auto movment = sf2box(direction);
             movment.Normalize();
             movment.x /= 10;
             movment.y /= 10;
             phys->body->ApplyForceToCenter(movment, true);
-
-            // calculate force to not bump into other enemies but to group up
-            auto otherEnemies = parent->scene->getEntitiesInRadius(
-                    parent,
-                    2 * TARGET_SEP,
-                    entity::enemy,
-                    false
-            );
-            for (auto otherEnemy : otherEnemies) {
-                auto physRef = otherEnemy.lock()->GetComponent<PhysicsBody>();
-                assertNotNull(physRef);
-                auto direction = otherEnemy.lock()->position.xy - parent->position.xy;
-                auto force = sf2box(direction);
-                force.Normalize();
-                auto distance = parent->position.distanceTo(otherEnemy.lock()->position);
-                force *= getEnemyScore(distance) * .2;
-                phys->body->ApplyForceToCenter(force, true);
-            }
+        }
+        // calculate force to not bump into other enemies but to group up
+        auto otherEnemies = parent->scene->getEntitiesInRadius(
+                parent,
+                2 * TARGET_SEP,
+                entity::enemy,
+                false
+        );
+        for (auto otherEnemy : otherEnemies) {
+            auto physRef = otherEnemy.lock()->GetComponent<PhysicsBody>();
+            assertNotNull(physRef);
+            auto direction = otherEnemy.lock()->position.xy - parent->position.xy;
+            auto force = sf2box(direction);
+            force.Normalize();
+            auto distance = parent->position.distanceTo(otherEnemy.lock()->position);
+            force *= getEnemyScore(distance) * .2;
+            phys->body->ApplyForceToCenter(force, true);
         }
     }
 }
