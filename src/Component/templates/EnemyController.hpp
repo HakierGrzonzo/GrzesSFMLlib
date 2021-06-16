@@ -8,5 +8,7 @@ namespace component {
             void Update();
         private:
             std::weak_ptr<entity::Entity> lastVisitedEntity;
+            std::weak_ptr<entity::Entity> player;
+            bool isPlayerDead;
     };
 }
