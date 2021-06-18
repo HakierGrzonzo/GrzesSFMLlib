@@ -25,24 +25,6 @@ float getScale(int height, int width) {
 }
 
 namespace entity {
-
-    void ContactListener::BeginContact(b2Contact* contact) {
-        auto bodyAuserdata = reinterpret_cast<component::PhysicsBody*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
-        auto bodyBuserdata = reinterpret_cast<component::PhysicsBody*>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
-        if (bodyAuserdata != nullptr && bodyBuserdata != nullptr) {
-            bodyAuserdata->OnCollisionEnter(bodyBuserdata);
-            bodyBuserdata->OnCollisionEnter(bodyAuserdata);
-        }
-    }
-    void ContactListener::EndContact(b2Contact* contact) {
-        auto bodyAuserdata = reinterpret_cast<component::PhysicsBody*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
-        auto bodyBuserdata = reinterpret_cast<component::PhysicsBody*>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
-        if (bodyAuserdata != nullptr && bodyBuserdata != nullptr) {
-            bodyAuserdata->OnCollisionLeave(bodyBuserdata);
-            bodyBuserdata->OnCollisionLeave(bodyAuserdata);
-        }
-    }
-
     EntitySystem::EntitySystem(sf::RenderWindow* windowRef_) {
         // setup view
         windowRef = windowRef_;
@@ -54,7 +36,7 @@ namespace entity {
         normal = std::vector<std::shared_ptr<Entity>>();
         top = std::vector<std::shared_ptr<Entity>>();
 
-        contactListener = ContactListener();
+        contactListener = utils::ContactListener();
         physicsWorld = std::shared_ptr<b2World>(new b2World(b2Vec2(0., 0.))); 
         physicsWorld->SetContactListener(&contactListener);
 

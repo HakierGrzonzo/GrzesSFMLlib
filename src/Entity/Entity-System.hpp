@@ -4,6 +4,7 @@
 #include "../Component/templates/Renderable.hpp"
 #include "Entity-Tags.hpp"
 #include "Inputs.hpp"
+#include "../Utils/ContactListener.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/View.hpp>
@@ -34,12 +35,6 @@ namespace entity {
     };
     const layers allLayers[] = {back, normal, top};
     
-    // helper class for EntitySystem
-    class ContactListener : public b2ContactListener {
-        public:
-            void BeginContact(b2Contact* contact);
-            void EndContact(b2Contact* contact);
-    };
     class EntitySystem {
         public:
             // constructor
@@ -114,7 +109,7 @@ namespace entity {
             std::chrono::time_point<std::chrono::steady_clock> lastTime;
             // get Vector that is connected with layer e.g. back -> background
             std::vector<std::shared_ptr<Entity>>* getVectorByLayer(layers layer);
-            ContactListener contactListener;
+            utils::ContactListener contactListener;
             utils::CameraSmoother smoother;
 
     };
