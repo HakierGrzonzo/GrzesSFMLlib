@@ -67,10 +67,11 @@
 
 %Makra
 
-\newcommand{\obrazek}[2]{
-\begin{figure}[h]
+\newcommand{\obrazek}[3]{
+\begin{figure}[p]
     \centering
     \includegraphics[scale=#1]{#2}
+    \caption{#3}\label{obr:#2}
 \end{figure}
 }     
 
@@ -209,6 +210,20 @@ Zainstaluj WSL. Narzędzia mingw64, mingw32 oraz msys2 nie dadzą rady. Adaptowa
     \item Spowolnienie czasu - lewy ctrl
     \item Celowanie myszą
 \end{itemize}
+
+Sterowanie jest również objaśnione na obrazku \ref{obr:controls.png}, wyświetlane jest na początku rozgrywki.
+
+Po zakończeniu gry, które jest zapowiedziane coraz bardziej czerwonym ekranem (patrz obrazek \ref{obr:lowHP.png}), wyświetlony zostanie czas gry (z uwzględnieniem spowolnienia czasu).
+
+Przeciwnicy wybuchają kiedy znajdą się blisko gracza, oraz jako iż starają się trzymać w kupie to dochodzi do widowiskowych reakcji łańcuchowych.
+
+Jeżeli okno gry straci focus, to rozgrywka zostanie spowolniona znacząco.
+
+\obrazek{.2}{controls.png}{Początek rozgrywki}
+
+\obrazek{.2}{enemies.png}{Przeciwnicy starający się atakować w grupie}
+
+\obrazek{.2}{lowHP.png}{Prawie że koniec rozgrywki}
 
 \subsection*{Różnice między wersją Windows a GNU/Linux}
 

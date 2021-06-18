@@ -40,5 +40,5 @@ graphs:
 	done
 
 docs: graphs
-	cd docs; xelatex docs.tex
+	cd docs; xelatex docs.tex && xelatex docs.tex
 

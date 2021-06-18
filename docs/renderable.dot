@@ -11,6 +11,8 @@ digraph G {
 			Renderable -> GameOverText;
 		SpriteRenderer;
 			Renderable -> SpriteRenderer;
+		TutorialText;
+			Renderable -> TutorialText;
 		ShadedSpriteRenderer;
 			SpriteRenderer -> ShadedSpriteRenderer;
 		EnemyControler;
