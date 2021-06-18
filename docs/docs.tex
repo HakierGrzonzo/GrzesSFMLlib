@@ -3,7 +3,7 @@
 %tu zmień marginesy i rozmiar czcionki
 \documentclass[a4paper,11pt]{article}
 \usepackage{inputenc}[utf8]
-\usepackage[margin=2.8cm]{geometry}
+\usepackage[margin=2.5cm]{geometry}
 \usepackage[polish]{babel}
 
 %Lepiej tego nie zmieniaj, jak co to dodawaj pakiety
@@ -142,29 +142,20 @@ Projekt był testowany jedynie w architekturze x86\_64, i686\footnote{32 bitowe 
     \begin{itemize}
         \item gcc - kompilator
         \item meson - środowisko budujące
-    \end{itemize}
-    \item Zalecane programy:
-    \begin{itemize}
-        \item GNU make - pliki \texttt{makefile} w projekcie same nie budują jego, lecz jedynie wyzwalają komendy kompilacji i uruchomienia.
-        \item fish - powłoka w której został napisany skrypt \texttt{refactor.sh}.
-        \item ffmpeg - konwersja plików \texttt{.wav} do formatów skompresowanych.
-        \item krita - edycja grafik (pliki \texttt{.kra} zawierają edytowalne wersje)
-        \item sfxr - generowanie efektów dźwiękowych (pliki \texttt{.sfxr} zawierają edytowalne wersje)
-        \item famitracker - generowanie innych efektów dźwiękowych (pliki \texttt{.ftm} zawierają edytowalne wersje)
-        \item xelatex - dokumentacja.
+        \item GNU make - automatyzacja budowania i uruchamiania.
     \end{itemize}
     \item Wymagane biblioteki:
     \begin{itemize}
         \item sfml
         \item box2d
-        \item OpenAL
-        \item libavcodec, libavutil, libavformat, libswresample - powinny być zainstalowane wraz z \texttt{ffmpeg}'iem
+        \item OpenAL[-soft]
+        \item libavcodec, libavutil, libavformat, libswresample - powinny być zainstalowane wraz z \texttt{ffmpeg}'iem, skompilowane biblioteki powinny mieć włączony kodek \texttt{aac}.
         \item Dla systemu linux:
         \begin{itemize}
             \item GTK+ 3
             \item \href{https://github.com/aaronmjacobs/Boxer}{boxer} - należy zainstalować bibliotekę samemu do \texttt{/lib64/libBoxer.a}
         \end{itemize}
-        Dla systemu windows obsługa popupów z błędami została wyłączona.
+        Dla systemu windows obsługa popupów z błędami została wyłączona z powodu trudności z znalezieniem pliku \texttt{windows.h}, obsługa popupów na systemie Windows jest możliwa, jednak nie została uznana za konieczną.
     \end{itemize}
 \end{itemize}
 
@@ -172,7 +163,7 @@ Projekt był testowany jedynie w architekturze x86\_64, i686\footnote{32 bitowe 
 
 Kompilację krzyżową można zrealizować za pomocą narzędzi \texttt{mingw-w64-*}, jednak trzeba wtedy samodzielnie skompilować wszystkie biblioteki za pomocą tych narzędzi. \emph{Arch Linux} w repozytoriach społeczności posiada wersje wielu z tych programów i bibliotek pod mingw właśnie. Projekt posiada skrypt \texttt{makewinBuild.sh} który kopiuje wybudowany plik wykonywalny, assety oraz pliki \texttt{dll} do folderu \texttt{release/} i go zipuje. Taka konfiguracja może łatwo być testowana za pomocą środowiska \texttt{WINE}\footnote{WINE - ,,Wine Is Not An Emulator'' - środowisko zastępujące biblioteki windowsowe unixowymi, pozwalające programom windowsowym działać na systemach unixopodobnych}.
 
-\subsection*{Obsługa projektu}
+\subsection*{Obsługa projektu (GNU/Linux)}
 
 Najpierw należy wykonać polecenie
 \begin{lstlisting}[frame=single,basicstyle=\ttfamily]
@@ -196,6 +187,9 @@ $ make run
 
 Jeżeli wystąpiły jakieś zmiany to meson je zbuduje.
 
+\subsection*{Obsługa projektu (Windows)}
+
+Zainstaluj WSL. Narzędzia mingw64, mingw32 oraz msys2 nie dadzą rady. Adaptowanie projektu pod visual'a na własną odpowiedzialność.
 
 \section{Instrukcja obsługi}
 
@@ -203,7 +197,8 @@ Jeżeli wystąpiły jakieś zmiany to meson je zbuduje.
 
 \begin{itemize}
     \item Karta graficzna z obsługą OpenGL 3.0 lub lepiej
-    \item 64 bitowy system Gnu/Linux lub 64 bitowy system Windows
+    \item 64 bitowy system GNU/Linux lub 64 bitowy system Windows
+    \item Klawiatura, mysz
 \end{itemize}
 
 \subsection*{Sterowanie}
@@ -213,6 +208,18 @@ Jeżeli wystąpiły jakieś zmiany to meson je zbuduje.
     \item Strzelanie spacją
     \item Spowolnienie czasu - lewy ctrl
     \item Celowanie myszą
+\end{itemize}
+
+\subsection*{Różnice między wersją Windows a GNU/Linux}
+
+Wersja na systemy windows nie posiada następującej funkcjonalności:
+\begin{itemize}
+    \item Popup'y z błędami.
+    \item Tryb \emph{niskiej wydajności} (Brak anty aliasingu, limit klatek do
+        30 na sekundę) jeżeli program został uruchomiony na laptopie który
+        działa na baterii\footnote{funkcjonalność powstała by oszczędzać baterię
+        podczas pracy nad projektem, kiedy za oknem panowie elektrycy dzielnie
+        wymieniali słupy.}.
 \end{itemize}
 
 \section{Dokumentacja techniczna}
@@ -225,8 +232,51 @@ Celem projektu było początkowo stworzenie gry, ale w jego trakcie okazało si�
     \item \textbf{Sprytne wskaźniki zamiast ,,gołych'' wskaźników} - smart pointer'y okazały się bardzo pomocną rzeczą, zastosowanie klasy \texttt{std::shared\_ptr} pozwoliło na wyeliminowanie problemów z żywotnością obiektów. Obiekty klasy \texttt{entity::EntitySystem} posiadją wskaźniki dzielone, a obiekty klasy \texttt{entity::Entity} odnoszą się do siebie za pomocą \texttt{std::weak\_ptr}, przez co mogą sprawdzać czy nadal istnieją. Obiekt klasy \texttt{audio::AudioScene} może bez problemu usuwać dźwięki obiektów które już nie istnieją.
     \item \textbf{Wykorzystanie wielu narzędzi jakie daje nam \texttt{c++}} - Zostały użyte makra, czy to do wpisywania stałych, czy to do małych operacji, jednak zdarzyła się sytuacja gdzie makro utrudniło pracę nad projektem\footnote{Makro \texttt{\#define sqr(x) x*x} nie było dobrym pomysłem}.
     \item \textbf{System Entity Component} - zaimplementowano system w formie jaka została zamierzona, jednak jego forma nie jest optymalna. Wcześniejsze ustalenie i zaplanowanie systemu w formie pozwalającej na wielowątkowość było by lepsze.
-    \item \textbf{Zapoznanie się z bibliotekami projektu FFmpeg} - Już przed rozpoczęciem projektu miałem duże doświadczenie z używaniem narzędzi \texttt{ffprobe} oraz \texttt{ffmpeg} w skryptach\footnote{W firmię, w której pracuje, rozwijam rozwiązania związane z transmisją wideo w sieci}, ale dobre zaimplementowanie filtrowania audio okazało się być trudniejsze niż myślałem, dla tego na chwilę obecną filtrowanie przejęła na siebie biblioteka \texttt{OpenAL}.
+    \item \textbf{Zapoznanie się z bibliotekami projektu FFmpeg} - Już przed
+        rozpoczęciem projektu miałem duże doświadczenie z używaniem narzędzi
+        \texttt{ffprobe} oraz \texttt{ffmpeg} w skryptach\footnote{W firmię, w
+        której pracuje, rozwijam rozwiązania związane z transmisją wideo w
+        sieci, właśnie z użyciem narzędzia \texttt{ffmpeg}}, ale dobre zaimplementowanie filtrowania audio okazało się być trudniejsze niż myślałem, dla tego na chwilę obecną filtrowanie przejęła na siebie biblioteka \texttt{OpenAL}.
 \end{enumerate}
+
+\subsection{Wnioski po zakończeniu prac}
+
+Stworzony system obiektów i komponentów ma wiele wad:
+\begin{itemize}
+    \item Jednowątkowość, program potrafii zarządzać tysiącem obiektów bez
+        większych problemów, jednak potrzebuje do tego 80\% czasu jednego wątku
+        procesora \emph{ryzen 5 3600}.
+    \item Klasa \texttt{entity::Entity} jest zbyt minimalistyczna, może należy
+        rozważyć podejście nie mające jej wogóle\footnote{Podobnie do silinika
+        \emph{Godot}.}.
+    \item Błędne podejście z brakiem \textbf{prawdziwych} konstruktorów
+        parametrycznych w klasach dziedziczących po
+        \texttt{component::Component}. Wszystkie zamiast tego przyjmują zawsze
+        jeden i ten sam argument.
+    \item Brak sposobu na serializacje obiektów klasy \texttt{entity::EntitySystem}.
+\end{itemize}
+
+\subsubsection*{Pomysły na rozwiązanie tych problemów}
+
+\begin{itemize}
+    \item Podejście \emph{funkcyjne} zamiast \emph{obiektowego}, zamiast polimorficznych klas z wirtualnymi metodami struktury z wskaźnikami.
+    \item Odnoszenie się komponentów między sobą przez \texttt{struct}'y stanu, gdzie podczas klatki: 
+        \begin{itemize}
+            \item Wszystkie \texttt{struct}'y stanu są kopiowane\footnote{lub tworzone są nowe}, tak by komponenty zmieniające swój stan podczas klatki nie wpływały na pozostałe.
+            \item Komponenty zmieniają swój stan dowolnie, jednak jeśli chcą zmienić stan innego komponentu, to zamiast robić to bezpośrednio, to \emph{wrzucają} prośbę do kolejki.
+            \item Komponenty zmieniają swój stan przetwarzając prośby z kolejki.
+        \end{itemize}
+        Taki \emph{,,protokół''} komunikacji między komponentami pozwoliłby na wielowątkowość w aplikacji.
+\end{itemize}
+
+\subsection{Znane błędy}
+
+\begin{itemize}
+    \item \texttt{libav} ma wycieki pamięci (około 198 kilobajtów dla wszystkich
+        dźwięków)
+    \item Przeciwnicy w większych grupach zaczynają wytwarzać swoje własne pole
+        grawitacyjne, odziałujące na innych przeciwników.
+\end{itemize}
 
 \subsection{Ogólny opis architektury projektu}
 
@@ -272,5 +322,15 @@ Reszta metod jest ściśle związana z tym co się dzieje podczas klatki:
     \centering
     \caption{Drzewo dziedziczenia komponentów}\label{rys:component}
 \end{figure}
+
+\section*{Spis assetów których sam nie zrobiłem:}
+
+\begin{itemize}
+    \item \texttt{./resources/antifachad.png} oraz \texttt{./resources/test.png} - Zbiór wojaków skompilowany przez \texttt{u/Reddit\_the\_xenomorph} dla społeczności \texttt{r/PoliticalCompassMemes}.
+    \item \texttt{./resources/test.aac} - Anonimowy student \emph{University of Aberdeen} - dosłownie kolega kolegi.
+    \item \texttt{./resources/shaders/explosion.frag} - ``Hyperspace explosion'' by Ben Wheatley - 2018 - Licencja MIT.
+    
+    Zmodyfikowany do współpracy z moim kodem.
+\end{itemize}
 
 \end{document}
