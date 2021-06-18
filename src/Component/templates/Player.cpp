@@ -22,6 +22,12 @@ namespace component {
     unsigned int Player::changeHP(int changeBy) {
         if (changeBy < 0) {
             timeSinceLastDamage = 0;
+            parent->scene->audioScene.addSource(
+                    parent->scene->getWeakPtr(parent),
+                    "sfx/hurt.wav.aac",
+                    1,
+                    false
+            );
         }
         return Creature::changeHP(changeBy);
     }

@@ -6,6 +6,8 @@
 #include "../../Component/templates/Debug.hpp"
 #include "../../Component/templates/sprites/Player.hpp"
 #include "../../Component/templates/guns/Pistol.hpp"
+#include "../../Component/templates/spawners/Test.hpp"
+#include "Korwin.hpp"
 #include <box2d/b2_math.h>
 
 namespace entity {
@@ -19,11 +21,21 @@ namespace entity {
         add_component(component::Player);
         add_component(component::PlayerControler);
         add_component(component::guns::Pistol);
+        add_component(component::spawners::Generic<tests::korwintest>);
     }
     
     void playerEntity::LateInitialize() {
         component::PhysicsBody* physics = GetComponent<component::PhysicsBody>();
         assertCond(physics == nullptr, "no physics body");
         physics->body->SetLinearDamping(2);
+        auto spawner = GetComponent<component::Spawner>();
+        assertCond(spawner == nullptr, "Spawner is missing");
+        spawner->startSpawning(1, 4000, -1);
+        scene->audioScene.addSource(
+                scene->getWeakPtr(this),
+                "test.aac",
+                1,
+                true
+            );
     }
 }

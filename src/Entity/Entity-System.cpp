@@ -5,6 +5,7 @@
 #include "Entity.hpp"
 #include "../Component/templates/Physics.hpp"
 #include "Inputs.hpp"
+#include "SystemStates.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
@@ -46,7 +47,7 @@ namespace entity {
         chunkCache = nullptr;
     }
 
-    void EntitySystem::doTick() {
+    states EntitySystem::doTick() {
         // get time since last frame
         auto now = std::chrono::steady_clock::now();
         std::chrono::duration<double> timeSpan = now - lastTime;
@@ -143,16 +144,19 @@ namespace entity {
                 auto rendererable = entity->GetComponent<component::Renderable>();
                 if (rendererable) {
                     auto renderStruct = rendererable->Render();
-                    assertNotNull(renderStruct.drawable);
-                    if (renderStruct.shader) {
-                        windowRef->draw(*(renderStruct.drawable), renderStruct.shader);
-                    } else {
-                        windowRef->draw(*(renderStruct.drawable));
+                    // if there is something to draw → draw it
+                    if (renderStruct.drawable) {
+                        if (renderStruct.shader) {
+                            windowRef->draw(*(renderStruct.drawable), renderStruct.shader);
+                        } else {
+                            windowRef->draw(*(renderStruct.drawable));
+                        }
                     }
                 }
             }
         }
         windowRef->display();
+        return focusedEntity.expired() ? gameOverState : normalState;
     }
 
     std::vector<std::shared_ptr<Entity>>* EntitySystem::getVectorByLayer(layers layer) {

@@ -4,6 +4,7 @@
 #include "../Component/templates/Renderable.hpp"
 #include "Entity-Tags.hpp"
 #include "Inputs.hpp"
+#include "SystemStates.hpp"
 #include "../Utils/ContactListener.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -40,7 +41,7 @@ namespace entity {
             // constructor
             EntitySystem(sf::RenderWindow* windowRef);
 
-            void doTick();
+            states doTick();
 
             // vectors with entities for three layers
             std::vector<std::shared_ptr<Entity>> background;

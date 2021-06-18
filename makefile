@@ -17,8 +17,9 @@ wine: buildWindows
 
 sfx: sfxr-raw/*.wav
 	for file in $$(ls sfxr-raw/*.wav); do \
-		newFile="$$(basename $${file})"; \
-		ffmpeg -i $${file} -y resources/sfx/$${newFile}.aac; \
+		newFile="resources/sfx/$$(basename $${file}).aac"; \
+		echo "$${file} -> $${newFile}"; \
+		ffmpeg -i $${file} -y $${newFile} 2> /dev/null; \
 		done
  
 clean:

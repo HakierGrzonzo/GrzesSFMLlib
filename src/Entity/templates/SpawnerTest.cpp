@@ -11,7 +11,7 @@ namespace entity {
 
     void SpawnerTest::Initialize() {
         add_component(component::sprites::testSprite);
-        add_component(component::spawners::Generic<tests::korwintest>)
+        //add_component(component::spawners::Generic<tests::korwintest>)
         //add_component(component::Debug);
     }
     void SpawnerTest::LateInitialize() {

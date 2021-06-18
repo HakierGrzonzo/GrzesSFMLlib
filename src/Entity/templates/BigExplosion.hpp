@@ -8,5 +8,6 @@ namespace entity {
         public:
             BigExplosion(utils::Position position, EntitySystem* scene);
             void Initialize();
+            void LateInitialize();
     };
 }

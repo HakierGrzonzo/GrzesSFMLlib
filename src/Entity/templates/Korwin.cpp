@@ -20,6 +20,12 @@ namespace entity {
             component::PhysicsBody* physics = GetComponent<component::PhysicsBody>();
             assertCond(physics == nullptr, "no physics body");
             physics->body->SetLinearDamping(8);
+            scene->audioScene.addSource(
+                    scene->getWeakPtr(this),
+                    "sfx/walk.wav.aac",
+                    1,
+                    true
+                );
         }
     }
 }

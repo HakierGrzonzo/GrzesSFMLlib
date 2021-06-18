@@ -25,6 +25,8 @@
 #include "Entity/templates/HPdisplay.hpp"
 #include "Entity/templates/Wall.hpp"
 #include "Entity/templates/HPeffect.hpp"
+#include "Entity/templates/Target.hpp"
+#include "Entity/templates/GameOverText.hpp"
 #include "Utils/Random.hpp"
 #include <fstream>
 
@@ -94,6 +96,7 @@ void gameloop() {
         &testScene
     ), entity::layers::back);
     // add test dev entity
+    /*
     testScene.addEntity(new entity::SpawnerTest(
         utils::Position(0, 600),
         &testScene
@@ -107,9 +110,10 @@ void gameloop() {
         utils::Position(0, 0),
         &testScene
     ));
+    */
     // add player entity
     testScene.addEntity(new entity::playerEntity(
-        utils::Position(1000, 1000),
+        utils::Position(),
         &testScene
     ));
     testScene.addEntity(new entity::HPdisplayer(
@@ -128,6 +132,16 @@ void gameloop() {
         utils::Position(),
         &testScene
         ), entity::top
+    );
+    testScene.addEntity(new entity::GameOverText(
+        utils::Position(),
+        &testScene
+        ), entity::top
+    );
+    testScene.addEntity(new entity::Target(
+                utils::Position(),
+                &testScene
+        ), entity::back
     );
 
     // get refrence to player and set it as a focused entity

@@ -31,7 +31,6 @@ namespace component {
             if (range != explosion->getRange()) {
                 range = explosion->getRange();
                 auto size = getSpriteSize();
-                print(range / size.x);
                 sprite.setOrigin(size / float(2));
                 sprite.setScale(sf::Vector2f(
                     range / size.x,

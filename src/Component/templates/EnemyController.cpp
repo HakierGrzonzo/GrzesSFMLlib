@@ -11,6 +11,8 @@ float getScore(int priority, float distance) {
 }
 
 #define TARGET_SEP 1000
+#define DETONATION 300
+#define LOCK_ON 3000
 
 float getEnemyScore(float distance) {
     if (distance > 2 * TARGET_SEP) {
@@ -31,12 +33,20 @@ namespace component {
         auto phys = parent->GetComponent<component::PhysicsBody>();
         assertNotNull(phys);
         bool playerInRange = false;
+        // get other nearby enemies
+        auto otherEnemies = parent->scene->getEntitiesInRadius(
+                parent,
+                2 * TARGET_SEP,
+                entity::enemy,
+                false
+        );
         // if player in range go to him
         if (!player.expired()) {
             auto playerRef = player.lock();
             if (
                     float distance = parent->position.distanceTo(playerRef->position); 
-                    distance < 3000) {
+                    distance < LOCK_ON * 2)
+                {
                 if (distance < 300) {
                     auto creature = parent->GetComponent<Enemy>();
                     assertNotNull(creature);
@@ -49,6 +59,11 @@ namespace component {
                 movment.Normalize();
                 movment.x /= 4;
                 movment.y /= 4;
+                // If I am alone -> run away
+                if (otherEnemies.size() < 2 && distance < LOCK_ON * 2 && 
+                        distance > LOCK_ON) {
+                    movment = -movment;
+                }
                 phys->body->ApplyForceToCenter(movment, true);
             }
         } else if (!isPlayerDead) {
@@ -97,12 +112,6 @@ namespace component {
             }
         }
         // calculate force to not bump into other enemies but to group up
-        auto otherEnemies = parent->scene->getEntitiesInRadius(
-                parent,
-                2 * TARGET_SEP,
-                entity::enemy,
-                false
-        );
         for (auto otherEnemy : otherEnemies) {
             auto physRef = otherEnemy.lock()->GetComponent<PhysicsBody>();
             assertNotNull(physRef);

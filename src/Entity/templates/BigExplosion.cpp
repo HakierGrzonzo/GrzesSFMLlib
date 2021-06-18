@@ -10,4 +10,13 @@ namespace entity {
         add_component(component::BigExplosion);
         add_component(component::sprites::Explosion);
     }
+
+    void BigExplosion::LateInitialize() {
+        scene->audioScene.addSource(
+                scene->getWeakPtr(this),
+                "sfx/explosion.wav.aac",
+                1,
+                false
+            );
+    }
 }
