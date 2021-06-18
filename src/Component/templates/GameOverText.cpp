@@ -34,7 +34,7 @@ namespace component {
             timeStream << minutes << ":";
             timeStream << std::setprecision(seconds >= 10 ? 4 : 3);
             timeStream << seconds;
-            text.setCharacterSize(125 * parent->scene->zoom);
+            text.setCharacterSize(125 * std::sqrt(parent->scene->zoom));
             text.setString(timeStream.str());
             text.setOrigin(sf::Vector2f(
                     text.getGlobalBounds().width / 2,

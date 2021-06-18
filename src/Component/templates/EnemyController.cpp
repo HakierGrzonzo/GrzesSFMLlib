@@ -47,6 +47,8 @@ namespace component {
                     float distance = parent->position.distanceTo(playerRef->position); 
                     distance < LOCK_ON * 2)
                 {
+                // sleep when far away
+                if (distance > 5 * LOCK_ON) return;
                 if (distance < 300) {
                     auto creature = parent->GetComponent<Enemy>();
                     assertNotNull(creature);
@@ -77,7 +79,7 @@ namespace component {
         if (!playerInRange) {
             auto targets = parent->scene->getEntitiesInRadius(
                 parent,
-                10000,
+                5000,
                 entity::target,
                 false
             );

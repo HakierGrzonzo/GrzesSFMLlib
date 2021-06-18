@@ -27,6 +27,7 @@
 #include "Entity/templates/HPeffect.hpp"
 #include "Entity/templates/Target.hpp"
 #include "Entity/templates/GameOverText.hpp"
+#include "Entity/templates/TutorialText.hpp"
 #include "Utils/Random.hpp"
 #include <fstream>
 
@@ -137,6 +138,11 @@ void gameloop() {
         utils::Position(),
         &testScene
         ), entity::top
+    );
+    testScene.addEntity(new entity::TutorialText(
+        utils::Position(),
+        &testScene
+        ), entity::back
     );
     testScene.addEntity(new entity::Target(
                 utils::Position(),
