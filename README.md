@@ -1,6 +1,6 @@
 # GrzesSFMLlib
 
-WORK IN PROGRESS
+WORK be done?
 
 ## Dependencies:
 
