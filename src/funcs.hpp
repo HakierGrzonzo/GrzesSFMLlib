@@ -8,9 +8,12 @@
               new name( \
                   dynamic_cast<entity::Entity*>(this))))); 
 
+#define debug
+
 #ifdef debug
 #define print(var) std::cerr << "\33[2K" << __FILE__ << ":" << __LINE__ << "\t" << #var << " -> \t" << var << std::endl;
 #define printVec2(var) std::cerr << "\33[2K" << __FILE__ << ":" << __LINE__ << "\t" << #var << " -> \t(" << var.x << "; " << var.y << ")" << std::endl;
+#undef debug
 #else
 #define print(x) ;
 #define printVec2(x) ;
