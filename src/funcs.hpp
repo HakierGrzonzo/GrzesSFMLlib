@@ -8,7 +8,7 @@
               new name( \
                   dynamic_cast<entity::Entity*>(this))))); 
 
-#define debug
+//#define debug
 
 #ifdef debug
 #define print(var) std::cerr << "\33[2K" << __FILE__ << ":" << __LINE__ << "\t" << #var << " -> \t" << var << std::endl;
